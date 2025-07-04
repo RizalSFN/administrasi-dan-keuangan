@@ -31,7 +31,7 @@ public class Login extends JFrame {
     }
 
     private void initComponents() {
-        setTitle("Login - Aplikasi Keuangan");
+        setTitle("Administrasi dan Keuangan - Login");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setLayout(new BorderLayout());
@@ -83,7 +83,7 @@ public class Login extends JFrame {
         formPanel.setBackground(Color.WHITE);
 
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5); 
+        gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         gbc.gridx = 0;
@@ -139,22 +139,13 @@ public class Login extends JFrame {
             } else if (user.getRole().equalsIgnoreCase("siswa")) {
                 new SiswaDashboard(user).setVisible(true);
             } else {
-                JOptionPane.showMessageDialog(this, "Role tidak dikenali!");
+                JOptionPane.showMessageDialog(this, "Login gagal, invalid akun!");
             }
 
-            this.dispose(); 
+            this.dispose();
         } else {
             JOptionPane.showMessageDialog(this, "Username atau Password salah!");
         }
-    }
-
-    private void openDashboard() {
-        this.dispose();
-        JFrame dashboard = new JFrame("Dashboard");
-        dashboard.setSize(400, 200);
-        dashboard.setLocationRelativeTo(null);
-        dashboard.add(new JLabel("Selamat datang di Dashboard!", SwingConstants.CENTER));
-        dashboard.setVisible(true);
     }
 
     public static void main(String[] args) {
