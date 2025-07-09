@@ -1,6 +1,7 @@
 {
     "java.project.referencedLibraries": [
         "lib/**/*.jar",
-        "c:\\Users\\RIZAL\\Documents\\Documents\\mysql connector j 8.0.20\\mysql-connector-java-8.0.20\\mysql-connector-java-8.0.20.jar"
+        "c:\\Users\\RIZAL\\Documents\\Documents\\mysql connector j 8.0.20\\mysql-connector-java-8.0.20\\mysql-connector-java-8.0.20.jar",
+        "c:\\Users\\RIZAL\\Downloads\\jbcrypt-0.4.jar"
     ]
 }
