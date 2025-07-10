@@ -1,0 +1,130 @@
+package model.DAO;
+
+import model.Student;
+import config.DatabaseConnection;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+
+public class StudentDAO {
+
+    private Connection conn;
+
+    public StudentDAO(Connection conn) {
+        this.conn = conn;
+    }
+
+    public boolean insertNewStudent(Student student) {
+        String sql = "INSERT INTO student (user_id, nama_lengkap, nisn, kelas) VALUES (?, ?, ?, ?)";
+
+        try {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+
+            stmt.setInt(1, student.getUserId());
+            stmt.setString(2, student.getNamaLengkap());
+            stmt.setString(3, student.getNisn());
+            stmt.setString(4, student.getKelas());
+
+            int rowsInserted = stmt.executeUpdate();
+            return rowsInserted > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public Student findByNamaLengkap(String nama_lengkap) {
+        Student student = null;
+
+        try {
+            String sql = "SELECT * FROM student WHERE nama_lengkap = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, nama_lengkap);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                student = new Student();
+                student.setId(rs.getInt("id"));
+                student.setUserId(rs.getInt("user_id"));
+                student.setNamaLengkap(rs.getString("nama_lengkap"));
+                student.setNisn(rs.getString("nisn"));
+                student.setKelas(rs.getString("kelas"));
+
+                Timestamp ts = rs.getTimestamp("created_at");
+                student.setCreatedAt(ts.toLocalDateTime());
+            }
+            rs.close();
+            stmt.close();
+            conn.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return student;
+    }
+
+    public Student findByNisn(String nisn) {
+        Student student = null;
+
+        try {
+            String sql = "SELECT * FROM student WHERE nisn = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, nisn);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                student = new Student();
+                student.setId(rs.getInt("id"));
+                student.setUserId(rs.getInt("user_id"));
+                student.setNamaLengkap(rs.getString("nama_lengkap"));
+                student.setNisn(rs.getString("nisn"));
+                student.setKelas(rs.getString("kelas"));
+
+                Timestamp ts = rs.getTimestamp("created_at");
+                student.setCreatedAt(ts.toLocalDateTime());
+            }
+            rs.close();
+            stmt.close();
+            conn.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return student;
+    }
+
+    public Student findByKelas(String kelas) {
+        Student student = null;
+
+        try {
+            String sql = "SELECT * FROM student WHERE kelas = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, kelas);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                student = new Student();
+                student.setId(rs.getInt("id"));
+                student.setUserId(rs.getInt("user_id"));
+                student.setNamaLengkap(rs.getString("nama_lengkap"));
+                student.setNisn(rs.getString("nisn"));
+                student.setKelas(rs.getString("kelas"));
+
+                Timestamp ts = rs.getTimestamp("created_at");
+                student.setCreatedAt(ts.toLocalDateTime());
+            }
+            rs.close();
+            stmt.close();
+            conn.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return student;
+    }
+}
