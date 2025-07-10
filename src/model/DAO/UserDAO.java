@@ -12,9 +12,7 @@ import config.DatabaseConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Timestamp;
 import java.util.ArrayList;
-// import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -69,9 +67,7 @@ public class UserDAO {
                 user.setEmail(rs.getString("email"));
                 user.setNomorTelepon(rs.getString("nomor_telepon"));
                 user.setStatus(rs.getString("status"));
-
-                Timestamp ts = rs.getTimestamp("created_at");
-                user.setCreatedAt(ts.toLocalDateTime());
+                user.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
             }
             rs.close();
             stmt.close();
@@ -101,9 +97,7 @@ public class UserDAO {
                 user.setEmail(rs.getString("email"));
                 user.setNomorTelepon(rs.getString("nomor_telepon"));
                 user.setStatus(rs.getString("status"));
-
-                Timestamp ts = rs.getTimestamp("created_at");
-                user.setCreatedAt(ts.toLocalDateTime());
+                user.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
             }
             rs.close();
             stmt.close();

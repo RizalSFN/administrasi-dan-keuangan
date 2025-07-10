@@ -1,16 +1,12 @@
 package model.DAO;
 
 import model.Student;
-// import config.DatabaseConnection;
+import config.DatabaseConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Timestamp;
 import java.util.ArrayList;
-// import java.time.LocalDateTime;
 import java.util.List;
-
-import config.DatabaseConnection;
 
 public class StudentDAO {
 
@@ -55,9 +51,7 @@ public class StudentDAO {
                 student.setNamaLengkap(rs.getString("nama_lengkap"));
                 student.setNisn(rs.getString("nisn"));
                 student.setKelas(rs.getString("kelas"));
-
-                Timestamp ts = rs.getTimestamp("created_at");
-                student.setCreatedAt(ts.toLocalDateTime());
+                student.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
             }
             rs.close();
             stmt.close();
@@ -86,9 +80,7 @@ public class StudentDAO {
                 student.setNamaLengkap(rs.getString("nama_lengkap"));
                 student.setNisn(rs.getString("nisn"));
                 student.setKelas(rs.getString("kelas"));
-
-                Timestamp ts = rs.getTimestamp("created_at");
-                student.setCreatedAt(ts.toLocalDateTime());
+                student.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
             }
             rs.close();
             stmt.close();
@@ -117,9 +109,7 @@ public class StudentDAO {
                 student.setNamaLengkap(rs.getString("nama_lengkap"));
                 student.setNisn(rs.getString("nisn"));
                 student.setKelas(rs.getString("kelas"));
-
-                Timestamp ts = rs.getTimestamp("created_at");
-                student.setCreatedAt(ts.toLocalDateTime());
+                student.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
             }
             rs.close();
             stmt.close();
