@@ -3,6 +3,7 @@ package model.DAO;
 import model.Invoice;
 import config.DatabaseConnection;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -17,7 +18,22 @@ public class InvoiceDAO {
     }
 
     public boolean insertNewInvoice(Invoice invoice) {
-        return false;
+        String sql = "INSERT INTO invoice (student_id, jumlah, tanggal_jatuh_tempo, status) VALUES (?, ?, ?, ?, ?)";
+
+        try {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+
+            stmt.setInt(1, invoice.getStudentId());
+            stmt.setFloat(2, invoice.getJumlah());
+            stmt.setDate(3, Date.valueOf(invoice.getTanggalJatuhTempo()));
+            stmt.setString(4, invoice.getStatus());
+
+            int rowsInserted = stmt.executeUpdate();
+            return rowsInserted > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public Invoice findByStudentId(int student_id) {
