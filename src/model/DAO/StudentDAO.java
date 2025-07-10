@@ -1,12 +1,16 @@
 package model.DAO;
 
 import model.Student;
-import config.DatabaseConnection;
+// import config.DatabaseConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
+import java.util.ArrayList;
+// import java.time.LocalDateTime;
+import java.util.List;
+
+import config.DatabaseConnection;
 
 public class StudentDAO {
 
@@ -126,5 +130,48 @@ public class StudentDAO {
         }
 
         return student;
+    }
+
+    public boolean updateStudent(Student student) {
+        StringBuilder sql = new StringBuilder("UPDATE student SET ");
+        List<Object> params = new ArrayList<>();
+
+        if (student.getNamaLengkap() != null && !student.getNamaLengkap().isEmpty()) {
+            sql.append("nama_lengkap = ?, ");
+            params.add(student.getNamaLengkap());
+        }
+
+        if (student.getNisn() != null && !student.getNisn().isEmpty()) {
+            sql.append("nisn = ?, ");
+            params.add(student.getNisn());
+        }
+
+        if (student.getKelas() != null && !student.getKelas().isEmpty()) {
+            sql.append("kelas = ?, ");
+            params.add(student.getKelas());
+        }
+
+        if (params.isEmpty()) {
+            return false;
+        }
+
+        sql.setLength(sql.length() - 2);
+
+        sql.append(" WHERE id = ?");
+        params.add(student.getId());
+
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            PreparedStatement stmt = conn.prepareStatement(sql.toString());
+
+            for (int i = 0; i < params.size(); i++) {
+                stmt.setObject(i + 1, params.get(i));
+            }
+
+            return stmt.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

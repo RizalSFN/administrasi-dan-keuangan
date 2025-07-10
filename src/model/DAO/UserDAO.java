@@ -6,14 +6,20 @@
 package model.DAO;
 
 import model.User;
-import config.DatabaseConnection;
+import utils.SecurityUtils;
+
+// import config.DatabaseConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
+import java.util.ArrayList;
+// import java.time.LocalDateTime;
+import java.util.List;
 
 import org.mindrot.jbcrypt.BCrypt;
+
+import config.DatabaseConnection;
 
 /**
  *
@@ -32,11 +38,10 @@ public class UserDAO {
 
         try {
             PreparedStatement stmt = conn.prepareStatement(sql);
+            String hashedPassword = SecurityUtils.hashPassword(user.getPassword());
+
             stmt.setString(1, user.getUsername());
-
-            String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
             stmt.setString(2, hashedPassword);
-
             stmt.setString(3, user.getRole());
             stmt.setString(4, user.getEmail());
             stmt.setString(5, user.getNomorTelepon());
@@ -112,5 +117,58 @@ public class UserDAO {
         }
 
         return user;
+    }
+
+    public boolean updateUser(User user) {
+        StringBuilder sql = new StringBuilder("UPDATE user SET ");
+        List<Object> params = new ArrayList<>();
+
+        if (user.getUsername() != null && !user.getUsername().isEmpty()) {
+            sql.append("username = ?, ");
+            params.add(user.getUsername());
+        }
+
+        if (user.getPassword() != null && !user.getPassword().isEmpty()) {
+            sql.append("password = ?, ");
+            params.add(SecurityUtils.hashPassword(user.getPassword()));
+        }
+
+        if (user.getEmail() != null && !user.getEmail().isEmpty()) {
+            sql.append("email = ?, ");
+            params.add(user.getEmail());
+        }
+
+        if (user.getNomorTelepon() != null && !user.getNomorTelepon().isEmpty()) {
+            sql.append("nomor_telepon = ?, ");
+            params.add(user.getNomorTelepon());
+        }
+
+        if (user.getStatus() != null && !user.getStatus().isEmpty()) {
+            sql.append("status = ?, ");
+            params.add(user.getStatus());
+        }
+
+        if (params.isEmpty()) {
+            return false;
+        }
+
+        sql.setLength(sql.length() - 2);
+
+        sql.append(" WHERE id = ?");
+        params.add(user.getId());
+
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            PreparedStatement stmt = conn.prepareStatement(sql.toString());
+
+            for (int i = 0; i < params.size(); i++) {
+                stmt.setObject(i + 1, params.get(i));
+            }
+
+            return stmt.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }
