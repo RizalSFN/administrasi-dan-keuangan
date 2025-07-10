@@ -8,7 +8,7 @@ package model.DAO;
 import model.User;
 import utils.SecurityUtils;
 
-// import config.DatabaseConnection;
+import config.DatabaseConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,8 +16,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 // import java.time.LocalDateTime;
 import java.util.List;
-
-import config.DatabaseConnection;
 
 /**
  *
