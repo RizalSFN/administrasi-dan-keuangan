@@ -12,7 +12,7 @@ public class TransactionHistoryDAO {
         this.conn = conn;
     }
 
-    public boolean insertNewHistory(TransactionHistory transactionHistory) {
+    public boolean insertNewTransactionHistory(TransactionHistory transactionHistory) {
         String sql = "INSERT INTO transaction_history (student_id, payment_id, keterangan) VALUES (?, ?, ?)";
 
         try {

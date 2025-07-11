@@ -15,5 +15,7 @@ public class IncomeSourceDAO {
         this.conn = conn;
     }
 
-    public boolean 
+    public boolean insertNewIncomeSource(IncomeSource incomeSource) {
+        
+    }
 }
