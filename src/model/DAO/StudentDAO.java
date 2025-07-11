@@ -150,7 +150,7 @@ public class StudentDAO {
         sql.append(" WHERE id = ?");
         params.add(student.getId());
 
-        try (Connection conn = DatabaseConnection.getConnection()) {
+        try {
             PreparedStatement stmt = conn.prepareStatement(sql.toString());
 
             for (int i = 0; i < params.size(); i++) {

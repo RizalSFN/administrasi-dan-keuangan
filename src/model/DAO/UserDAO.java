@@ -147,7 +147,7 @@ public class UserDAO {
         sql.append(" WHERE id = ?");
         params.add(user.getId());
 
-        try (Connection conn = DatabaseConnection.getConnection()) {
+        try {
             PreparedStatement stmt = conn.prepareStatement(sql.toString());
 
             for (int i = 0; i < params.size(); i++) {

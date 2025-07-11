@@ -127,7 +127,7 @@ public class InvoiceDAO {
         sql.append(" WHERE id = ?");
         params.add(invoice.getId());
 
-        try (Connection conn = DatabaseConnection.getConnection()) {
+        try {
             PreparedStatement stmt = conn.prepareStatement(sql.toString());
 
             for (int i = 1; i < params.size(); i++) {
