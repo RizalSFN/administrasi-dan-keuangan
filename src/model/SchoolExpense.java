@@ -5,7 +5,6 @@ import java.time.LocalDate;
 
 public class SchoolExpense {
     private int id;
-    private String nama_pengeluaran;
     private int category_id;
     private float jumlah;
     private LocalDate tanggal_pengeluaran;
@@ -23,14 +22,6 @@ public class SchoolExpense {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public String getNamaPengeluaran() {
-        return nama_pengeluaran;
-    }
-
-    public void setNamaPengeluaran(String nama_pengeluaran) {
-        this.nama_pengeluaran = nama_pengeluaran;
     }
 
     public int getCategoryId() {

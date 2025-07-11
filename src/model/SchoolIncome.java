@@ -17,6 +17,7 @@ public class SchoolIncome {
     private int source_id;
     private float jumlah;
     private LocalDate tanggal_pemasukan;
+    private String bukti_transaksi;
     private String keterangan;
     private int created_by;
     private LocalDateTime created_at;
@@ -53,6 +54,14 @@ public class SchoolIncome {
 
     public void setTanggalPemasukan(LocalDate tanggal_pemasukan) {
         this.tanggal_pemasukan = tanggal_pemasukan;
+    }
+
+    public String getBuktiTransaksi() {
+        return bukti_transaksi;
+    }
+
+    public void setBuktiTransaksi(String bukti_transaksi) {
+        this.bukti_transaksi = bukti_transaksi;
     }
 
     public String getKeterangan() {
