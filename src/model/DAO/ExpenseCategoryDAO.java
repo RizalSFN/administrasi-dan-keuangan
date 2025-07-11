@@ -49,6 +49,9 @@ public class ExpenseCategoryDAO {
                 expenseCategory.setStatus(rs.getString("status"));
                 expenseCategory.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
             }
+            rs.close();
+            stmt.close();
+            conn.close();
         } catch (Exception e) {
             e.printStackTrace();
         }

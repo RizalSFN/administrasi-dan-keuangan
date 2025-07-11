@@ -49,6 +49,9 @@ public class IncomeSourceDAO {
                 incomeSource.setStatus(rs.getString("status"));
                 incomeSource.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
             }
+            rs.close();
+            stmt.close();
+            conn.close();
         } catch (Exception e) {
             e.printStackTrace();
         }

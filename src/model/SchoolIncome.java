@@ -43,7 +43,7 @@ public class SchoolIncome {
         return jumlah;
     }
 
-    public void setJumlah(int jumlah) {
+    public void setJumlah(float jumlah) {
         this.jumlah = jumlah;
     }
 

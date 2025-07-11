@@ -48,6 +48,9 @@ public class TransactionHistoryDAO {
                 transactionHistory.setKeterangan(rs.getString("keterangan"));
                 transactionHistory.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
             }
+            rs.close();
+            stmt.close();
+            conn.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -72,6 +75,9 @@ public class TransactionHistoryDAO {
                 transactionHistory.setKeterangan(rs.getString("keterangan"));
                 transactionHistory.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
             }
+            rs.close();
+            stmt.close();
+            conn.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
