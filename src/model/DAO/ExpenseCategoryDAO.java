@@ -1,8 +1,6 @@
 package model.DAO;
 
 import model.ExpenseCategory;
-import model.IncomeSource;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -58,7 +56,7 @@ public class ExpenseCategoryDAO {
         return expenseCategory;
     }
 
-    public boolean updateExpenseCategory (ExpenseCategory expenseCategory) {
+    public boolean updateExpenseCategory(ExpenseCategory expenseCategory) {
         StringBuilder sql = new StringBuilder("UPDATE expense_category SET ");
         List<Object> params = new ArrayList<>();
 
