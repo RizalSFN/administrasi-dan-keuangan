@@ -19,12 +19,14 @@ public class DatabaseConnection {
     private static final String PASSWORD = "";
 
     public static Connection getConnection() throws SQLException {
+        Connection conn = null;
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
+            conn = DriverManager.getConnection(URL, USER, PASSWORD);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
 
-        return DriverManager.getConnection(URL, USER, PASSWORD);
+        return conn;
     }
 }
