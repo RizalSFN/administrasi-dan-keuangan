@@ -1,13 +1,9 @@
 package model.DAO;
 
 import model.TransactionHistory;
-import config.DatabaseConnection;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.List;
 
 public class TransactionHistoryDAO {
     private Connection conn;
