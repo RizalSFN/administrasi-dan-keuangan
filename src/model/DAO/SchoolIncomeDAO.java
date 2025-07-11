@@ -16,7 +16,7 @@ public class SchoolIncomeDAO {
     }
 
     public boolean insertNewSchoolIncome(SchoolIncome schoolIncome) {
-        String sql = "INSERT INTO school_income (source_id, jumlah, tanggal_pemasukan, keterangan, created_by) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO school_income (source_id, jumlah, tanggal_pemasukan, bukti_transaksi, keterangan, created_by) VALUES (?, ?, ?, ?, ?, ?)";
 
         try {
             PreparedStatement stmt = conn.prepareStatement(sql);
@@ -24,8 +24,9 @@ public class SchoolIncomeDAO {
             stmt.setInt(1, schoolIncome.getSourceId());
             stmt.setFloat(2, schoolIncome.getJumlah());
             stmt.setDate(3, Date.valueOf(schoolIncome.getTanggalPemasukan()));
-            stmt.setString(4, schoolIncome.getKeterangan());
-            stmt.setInt(5, schoolIncome.getCreatedBy());
+            stmt.setString(4, schoolIncome.getBuktiTransaksi());
+            stmt.setString(5, schoolIncome.getKeterangan());
+            stmt.setInt(6, schoolIncome.getCreatedBy());
 
             int rowsInserted = stmt.executeUpdate();
             return rowsInserted > 0;
@@ -50,6 +51,7 @@ public class SchoolIncomeDAO {
                 schoolIncome.setSourceId(rs.getInt("source_id"));
                 schoolIncome.setJumlah(rs.getFloat("jumlah"));
                 schoolIncome.setTanggalPemasukan(rs.getDate("tanggal_pemasukan").toLocalDate());
+                schoolIncome.setBuktiTransaksi(rs.getString("bukti_transaksi"));
                 schoolIncome.setKeterangan(rs.getString("keterangan"));
                 schoolIncome.setCreatedBy(rs.getInt("created_by"));
                 schoolIncome.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
@@ -79,6 +81,7 @@ public class SchoolIncomeDAO {
                 schoolIncome.setSourceId(rs.getInt("source_id"));
                 schoolIncome.setJumlah(rs.getFloat("jumlah"));
                 schoolIncome.setTanggalPemasukan(rs.getDate("tanggal_pemasukan").toLocalDate());
+                schoolIncome.setBuktiTransaksi(rs.getString("bukti_transaksi"));
                 schoolIncome.setKeterangan(rs.getString("keterangan"));
                 schoolIncome.setCreatedBy(rs.getInt("created_by"));
                 schoolIncome.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
@@ -110,6 +113,11 @@ public class SchoolIncomeDAO {
         if (schoolIncome.getTanggalPemasukan() != null) {
             sql.append("tanggal_pemasukan = ?, ");
             params.add(schoolIncome.getTanggalPemasukan());
+        }
+
+        if (schoolIncome.getBuktiTransaksi() != null && !schoolIncome.getBuktiTransaksi().isEmpty()) {
+            sql.append("bukti_transaksi = ?, ");
+            params.add(schoolIncome.getBuktiTransaksi());
         }
 
         if (schoolIncome.getKeterangan() != null && !schoolIncome.getKeterangan().isEmpty()) {
