@@ -63,6 +63,9 @@ public class SchoolCashflowDAO {
                 schoolCashflow.setSaldoAkhir(rs.getFloat("saldo_akhir"));
                 schoolCashflow.setKeterangan(rs.getString("keterangan"));
             }
+            rs.close();
+            stmt.close();
+            conn.close();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -92,6 +95,9 @@ public class SchoolCashflowDAO {
                 schoolCashflow.setSaldoAkhir(rs.getFloat("saldo_akhir"));
                 schoolCashflow.setKeterangan(rs.getString("keterangan"));
             }
+            rs.close();
+            stmt.close();
+            conn.close();
 
         } catch (Exception e) {
             e.printStackTrace();
