@@ -57,4 +57,42 @@ public class NotificationCategoryDAO {
 
         return notificationCategory;
     }
+
+    public boolean updateNotificationCategory(NotificationCategory notificationCategory) {
+        StringBuilder sql = new StringBuilder("UPDATE notification_category SET ");
+        List<Object> params = new ArrayList<>();
+
+        if (notificationCategory.getNama() != null && !notificationCategory.getNama().isEmpty()) {
+            sql.append("nama = ?, ");
+            params.add(notificationCategory.getNama());
+        }
+
+        if (notificationCategory.getStatus() != null && !notificationCategory.getStatus().isEmpty()) {
+            sql.append("status = ?, ");
+            params.add(notificationCategory.getStatus());
+        }
+
+        if (params.isEmpty()) {
+            return false;
+        }
+
+        sql.setLength(sql.length() - 2);
+
+        sql.append(" WHERE id = ?");
+        params.add(notificationCategory.getId());
+
+        try {
+            PreparedStatement stmt = conn.prepareStatement(sql.toString());
+
+            for (int i = 1; i < params.size(); i++) {
+                stmt.setObject(i + 1, params.get(i));
+            }
+
+            return stmt.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }
