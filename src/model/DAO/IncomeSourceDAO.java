@@ -51,7 +51,7 @@ public class IncomeSourceDAO {
             }
             rs.close();
             stmt.close();
-            conn.close();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
