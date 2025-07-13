@@ -49,7 +49,6 @@ public class InvoiceDAO {
             }
             rs.close();
             stmt.close();
-            conn.close();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -77,7 +76,6 @@ public class InvoiceDAO {
             }
             rs.close();
             stmt.close();
-            conn.close();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -106,7 +104,6 @@ public class InvoiceDAO {
             }
             rs.close();
             stmt.close();
-            conn.close();
 
         } catch (Exception e) {
             e.printStackTrace();
