@@ -6,5 +6,26 @@ import config.DatabaseConnection;
 import java.sql.Connection;
 
 public class StudentController {
+    private StudentDAO studentDAO;
 
+    public StudentController() {
+        try {
+            Connection conn = DatabaseConnection.getConnection();
+            studentDAO = new StudentDAO(conn);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean createStudent(int userId, String namaLengkap, String nisn, String kelas) {
+        Student student = new Student();
+        student.setUserId(userId);
+        student.setNamaLengkap(namaLengkap);
+        student.setNisn(nisn);
+        student.setKelas(kelas);
+
+        return studentDAO.insertNewStudent(student);
+    }
+
+    
 }
