@@ -61,7 +61,6 @@ public class NotificationDAO {
             }
             rs.close();
             stmt.close();
-            conn.close();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -92,7 +91,6 @@ public class NotificationDAO {
             }
             rs.close();
             stmt.close();
-            conn.close();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -123,7 +121,6 @@ public class NotificationDAO {
             }
             rs.close();
             stmt.close();
-            conn.close();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -154,7 +151,6 @@ public class NotificationDAO {
             }
             rs.close();
             stmt.close();
-            conn.close();
 
         } catch (Exception e) {
             e.printStackTrace();
