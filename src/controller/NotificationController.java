@@ -4,8 +4,6 @@ import model.Notification;
 import model.DAO.NotificationDAO;
 import config.DatabaseConnection;
 import java.sql.Connection;
-import java.sql.Date;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class NotificationController {
@@ -35,7 +33,7 @@ public class NotificationController {
     }
 
     public Notification getNotificationByNotificationCategoryId(int notificationCategoryId) {
-        return notificationDAO.findByNotificationCategory(notificationCategoryId);
+        return notificationDAO.findByNotificationCategoryId(notificationCategoryId);
     }
 
     public Notification getNotificationByStudentId(int studentId) {
@@ -45,5 +43,9 @@ public class NotificationController {
     public Notification getNotificationByInvoiceId(int invoiceId) {
         return notificationDAO.findByInvoiceId(invoiceId);
         
+    }
+
+    public Notification getNotificationByStatus(String status) {
+        return notificationDAO.findByStatus(status);
     }
 }
