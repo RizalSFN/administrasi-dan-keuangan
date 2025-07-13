@@ -39,7 +39,7 @@ public class NotificationDAO {
         }
     }
 
-    public Notification findByNotificationCategory(int notification_category_id) {
+    public Notification findByNotificationCategoryId(int notification_category_id) {
         Notification notification = null;
 
         try {
