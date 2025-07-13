@@ -27,5 +27,21 @@ public class StudentController {
         return studentDAO.insertNewStudent(student);
     }
 
+    public Student getStudentByUserId(int userId) {
+        return studentDAO.findByUserId(userId);
+    }
+
+    public Student getStudentByNamaLengkap(String namaLengkap) {
+        return studentDAO.findByNamaLengkap(namaLengkap);
+    }
+
+    public Student getStudentByNisn(String nisn) {
+        return studentDAO.findByNisn(nisn);
+    }
+
+    public Student getStudentByKelas(String kelas) {
+        return studentDAO.findByKelas(kelas);
+    }
+
     
 }
