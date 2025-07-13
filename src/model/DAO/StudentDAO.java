@@ -34,6 +34,35 @@ public class StudentDAO {
         }
     }
 
+    public Student findByUserId(int user_id) {
+        Student student = null;
+
+        try {
+            String sql = "SELECT * FROM student WHERE user_id = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, user_id);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                student = new Student();
+                student.setId(rs.getInt("id"));
+                student.setUserId(rs.getInt("user_id"));
+                student.setNamaLengkap(rs.getString("nama_lengkap"));
+                student.setNisn(rs.getString("nisn"));
+                student.setKelas(rs.getString("kelas"));
+                student.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+            }
+            rs.close();
+            stmt.close();
+            conn.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return student;
+    }
+
     public Student findByNamaLengkap(String nama_lengkap) {
         Student student = null;
 

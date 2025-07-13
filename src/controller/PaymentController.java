@@ -2,6 +2,7 @@ package controller;
 
 import config.DatabaseConnection;
 import model.Payment;
+import model.TransactionHistory;
 import model.DAO.PaymentDAO;
 import java.sql.Connection;
 import java.time.LocalDate;
@@ -27,7 +28,12 @@ public class PaymentController {
         payment.setJenisPembayaran("tunai");
         payment.setStatusVerifikasi("menunggu");
 
-        return paymentDAO.insertNewPayment(payment);
+        int paymentId = paymentDAO.insertNewPayment(payment);
+
+        if (paymentId > 0) {
+            TransactionHistory transactionHistory = new TransactionHistory();
+            transactionHistory
+        }
     }
 
     public boolean cashlessPayment(int invoice_id, float jumlah_bayar, String bukti_pembayaran) {
