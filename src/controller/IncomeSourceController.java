@@ -26,11 +26,7 @@ public class IncomeSourceController {
         return incomeSourceDAO.insertNewIncomeSource(incomeSource);
     }
 
-    public boolean updateStatus(int incomeSourceId, String status) {
-        IncomeSource incomeSource = new IncomeSource();
-        incomeSource.setId(incomeSourceId);
-        incomeSource.setStatus(status);
-
+    public boolean updateIncomeSource(IncomeSource incomeSource) {
         return incomeSourceDAO.updateIncomeSource(incomeSource);
     }
 
