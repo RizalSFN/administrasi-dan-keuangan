@@ -7,10 +7,10 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.time.LocalDate;
 
-public class SchoolInconeController {
+public class SchoolIncomeController {
     private SchoolIncomeDAO schoolIncomeDAO;
 
-    public SchoolInconeController() {
+    public SchoolIncomeController() {
         try {
             Connection conn = DatabaseConnection.getConnection();
             schoolIncomeDAO = new SchoolIncomeDAO(conn);
