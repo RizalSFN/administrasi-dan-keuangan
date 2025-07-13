@@ -16,11 +16,12 @@ public class PaymentDAO {
         this.conn = conn;
     }
 
-    public boolean insertNewPayment(Payment payment) {
+    public int insertNewPayment(Payment payment) {
         String sql = "INSERT INTO payment (invoice_id, bukti_pembayaran, tanggal_bayar, jumlah_bayar, jenis_pembayaran, status_verifikasi) VALUES (?, ?, ?, ?, ?, ?)";
+        int generatedId = -1;
 
         try {
-            PreparedStatement stmt = conn.prepareStatement(sql);
+            PreparedStatement stmt = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
 
             stmt.setInt(1, payment.getInvoiceId());
             stmt.setString(2, payment.getBuktiPembayaran());
@@ -30,12 +31,20 @@ public class PaymentDAO {
             stmt.setString(6, payment.getStatusVerifikasi());
 
             int rowsInserted = stmt.executeUpdate();
-            return rowsInserted > 0;
+
+            if (rowsInserted > 0) {
+                ResultSet generatedKeys = stmt.getGeneratedKeys();
+                if (generatedKeys.next()) {
+                    generatedId = generatedKeys.getInt(1);
+                }
+            }
+            stmt.close();
 
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
         }
+
+        return generatedId;
     }
 
     public Payment findByInvoiceId(int invoice_id) {
