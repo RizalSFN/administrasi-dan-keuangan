@@ -50,7 +50,7 @@ public class TransactionHistoryDAO {
             }
             rs.close();
             stmt.close();
-            conn.close();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -77,7 +77,7 @@ public class TransactionHistoryDAO {
             }
             rs.close();
             stmt.close();
-            conn.close();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
