@@ -65,7 +65,6 @@ public class SchoolCashflowDAO {
             }
             rs.close();
             stmt.close();
-            conn.close();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -97,7 +96,6 @@ public class SchoolCashflowDAO {
             }
             rs.close();
             stmt.close();
-            conn.close();
 
         } catch (Exception e) {
             e.printStackTrace();
