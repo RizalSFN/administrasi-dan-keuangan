@@ -26,6 +26,24 @@ public class InvoiceController {
         invoice.setStudentId(student_id);
         invoice.setJumlah(jumlah);
         invoice.setTanggalJatuhTempo(tanggalJatuhTempo);
-        invoice.setStatus("belum_lunas");
+        invoice.setStatus("belum lunas");
+
+        return invoiceDAO.insertNewInvoice(invoice);
+    }
+
+    public boolean updateStatus(int invoice_id, String status_baru) {
+        Invoice invoice = new Invoice();
+        invoice.setId(invoice_id);
+        invoice.setStatus(status_baru);
+
+        return invoiceDAO.updateInvoice(invoice);
+    }
+
+    public Invoice getInvoiceByStudentId(int student_id) {
+        return invoiceDAO.findByStudentId(student_id);
+    }
+
+    public Invoice getInvoiceByStatus(String status) {
+        return invoiceDAO.findByStatus(status);
     }
 }
