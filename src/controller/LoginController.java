@@ -10,7 +10,6 @@ import java.sql.Connection;
 import model.User;
 import model.DAO.UserDAO;
 import utils.SecurityUtils;
-import java.sql.SQLException;
 
 /**
  *
