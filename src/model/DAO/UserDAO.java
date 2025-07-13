@@ -70,7 +70,7 @@ public class UserDAO {
             }
             rs.close();
             stmt.close();
-            conn.close();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -100,7 +100,7 @@ public class UserDAO {
             }
             rs.close();
             stmt.close();
-            conn.close();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
