@@ -42,11 +42,7 @@ public class PaymentController {
         return paymentDAO.insertNewPayment(payment);
     }
 
-    public boolean updateStatus(int payment_id, String status_baru) {
-        Payment payment = new Payment();
-        payment.setId(payment_id);
-        payment.setStatusVerifikasi(status_baru);
-
+    public boolean updatePayment(Payment payment) {
         return paymentDAO.updatePayment(payment);
     }
 
