@@ -35,22 +35,17 @@ public class InvoiceDAO {
         }
     }
 
-    public Invoice findById(int id) {
-        Invoice invoice = null;
+    public int findById(int id) {
+        int invoice_id = -1;
+        String sql = "SELECT student_id FROM invoice WHERE id = ?";
 
         try {
-            String sql = "SELECT * FROM invoice WHERE id = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                invoice = new Invoice();
-                invoice.setId(rs.getInt("id"));
-                invoice.setStudentId(rs.getInt("student_id"));
-                invoice.setJumlah(rs.getFloat("jumlah"));
-                invoice.setTanggalJatuhTempo(rs.getDate("tanggal_jatuh_tempo").toLocalDate());
-                invoice.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+                invoice_id = rs.getInt("student_id");
             }
             rs.close();
             stmt.close();
@@ -60,7 +55,7 @@ public class InvoiceDAO {
             e.printStackTrace();
         }
 
-        return invoice;
+        return invoice_id;
     }
 
     public Invoice findByStudentId(int student_id) {
