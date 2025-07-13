@@ -18,7 +18,7 @@ public class PaymentController {
         }
     }
 
-    public boolean bayarTunai(int invoice_id, float jummlah_bayar) {
+    public boolean cashPayment(int invoice_id, float jummlah_bayar) {
         Payment payment = new Payment();
         payment.setInvoiceId(invoice_id);
         payment.setBuktiPembayaran(null);
@@ -30,7 +30,7 @@ public class PaymentController {
         return paymentDAO.insertNewPayment(payment);
     }
 
-    public boolean bayarNonTunai(int invoice_id, float jumlah_bayar, String bukti_pembayaran) {
+    public boolean cashlessPayment(int invoice_id, float jumlah_bayar, String bukti_pembayaran) {
         Payment payment = new Payment();
         payment.setInvoiceId(invoice_id);
         payment.setBuktiPembayaran(bukti_pembayaran);
