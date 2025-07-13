@@ -54,7 +54,6 @@ public class StudentDAO {
             }
             rs.close();
             stmt.close();
-            conn.close();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -83,7 +82,6 @@ public class StudentDAO {
             }
             rs.close();
             stmt.close();
-            conn.close();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -112,7 +110,6 @@ public class StudentDAO {
             }
             rs.close();
             stmt.close();
-            conn.close();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -141,7 +138,6 @@ public class StudentDAO {
             }
             rs.close();
             stmt.close();
-            conn.close();
 
         } catch (Exception e) {
             e.printStackTrace();
