@@ -4,7 +4,6 @@ import model.NotificationCategory;
 import model.DAO.NotificationCategoryDAO;
 import config.DatabaseConnection;
 import java.sql.Connection;
-import java.sql.Date;
 
 public class NotificationCategoryController {
     private NotificationCategoryDAO notificationCategoryDAO;
