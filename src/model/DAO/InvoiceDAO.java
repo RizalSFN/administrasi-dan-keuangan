@@ -35,6 +35,34 @@ public class InvoiceDAO {
         }
     }
 
+    public Invoice findById(int id) {
+        Invoice invoice = null;
+
+        try {
+            String sql = "SELECT * FROM invoice WHERE id = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                invoice = new Invoice();
+                invoice.setId(rs.getInt("id"));
+                invoice.setStudentId(rs.getInt("student_id"));
+                invoice.setJumlah(rs.getFloat("jumlah"));
+                invoice.setTanggalJatuhTempo(rs.getDate("tanggal_jatuh_tempo").toLocalDate());
+                invoice.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+            }
+            rs.close();
+            stmt.close();
+            conn.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return invoice;
+    }
+
     public Invoice findByStudentId(int student_id) {
         Invoice invoice = null;
 

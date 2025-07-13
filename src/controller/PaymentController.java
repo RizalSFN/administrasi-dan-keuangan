@@ -31,8 +31,7 @@ public class PaymentController {
         int paymentId = paymentDAO.insertNewPayment(payment);
 
         if (paymentId > 0) {
-            TransactionHistory transactionHistory = new TransactionHistory();
-            transactionHistory
+            
         }
     }
 
