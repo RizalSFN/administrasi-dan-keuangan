@@ -31,11 +31,7 @@ public class InvoiceController {
         return invoiceDAO.insertNewInvoice(invoice);
     }
 
-    public boolean updateStatus(int invoice_id, String status_baru) {
-        Invoice invoice = new Invoice();
-        invoice.setId(invoice_id);
-        invoice.setStatus(status_baru);
-
+    public boolean updateInvoice(Invoice invoice) {
         return invoiceDAO.updateInvoice(invoice);
     }
 
