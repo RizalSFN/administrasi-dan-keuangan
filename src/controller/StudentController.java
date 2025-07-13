@@ -43,5 +43,7 @@ public class StudentController {
         return studentDAO.findByKelas(kelas);
     }
 
-    
+    public boolean updateStudent(Student student) {
+        return studentDAO.updateStudent(student);
+    }
 }
