@@ -12,7 +12,7 @@ public class ReportDAO {
         this.conn = conn;
     }
 
-    public float getTotalIncome() {
+    public float getTotalMonthlyIncome() {
         float total = 0;
 
         try {
