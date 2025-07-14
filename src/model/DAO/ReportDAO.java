@@ -16,7 +16,7 @@ public class ReportDAO {
         float total = 0;
 
         try {
-            String sql = "SELECT SUM(jumlah) FROM school_income";
+            String sql = "SELECT SUM(jumlah) FROM school_income WHERE MONTH(tanggal_pemasukan) = MONTH(CURRENT_DATE)";
             PreparedStatement stmt = conn.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
 
@@ -33,15 +33,15 @@ public class ReportDAO {
         return total;
     }
 
-    public float getTotalExpense() {
+    public float getTotalMonthlyExpense() {
         float total = 0;
 
         try {
-            String sql = "SELECT SUM(jumlah) FROM school_expense";
+            String sql = "SELECT SUM(jumlah) FROM school_expense WHERE MONTH(tanggal_pengeluaran) = MONTH(CURRENT_DATE)";
             PreparedStatement stmt = conn.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
 
-            if  (rs.next()) {
+            if (rs.next()) {
                 total = rs.getFloat(1);
             }
             stmt.close();
