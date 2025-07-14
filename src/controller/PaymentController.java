@@ -6,6 +6,7 @@ import model.TransactionHistory;
 import model.DAO.InvoiceDAO;
 import model.DAO.PaymentDAO;
 import model.DAO.TransactionHistoryDAO;
+import utils.EmailSender;
 
 import java.sql.Connection;
 import java.time.LocalDate;
@@ -90,5 +91,17 @@ public class PaymentController {
 
     public Payment getPaymentByStatusVerifikasi(String status) {
         return paymentDAO.findByStatusVerifikasi(status);
+    }
+
+    public void sendPaymentReminder(String studentEmail, String namaSiswa, String invoiceInfo) {
+
+        String emailSubject = "Pengingat Pembayaran SPP";
+
+        String emailBody = "Yth. Orang Tua/Wali dari " + namaSiswa + ", \n\n"
+                + "Berikut info tagihan:\n"
+                + invoiceInfo + "\n\n"
+                + "Terima kasih.";
+
+        EmailSender.sendEmail(studentEmail, emailSubject, emailBody);
     }
 }
