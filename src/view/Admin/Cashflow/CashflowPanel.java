@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package view.Admin;
+package view.Admin.Cashflow;
 
 import model.User;
 
@@ -11,18 +11,18 @@ import model.User;
  *
  * @author RIZAL
  */
-public class Cashflow extends javax.swing.JPanel {
+public class CashflowPanel extends javax.swing.JPanel {
 
     private User user;
     
     /**
      * Creates new form Cashflow
      */
-    public Cashflow() {
+    public CashflowPanel() {
         initComponents();
     }
     
-    public Cashflow(User user) {
+    public CashflowPanel(User user) {
         initComponents();
         this.user = user;
     }

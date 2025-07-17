@@ -11,18 +11,18 @@ import model.User;
  *
  * @author RIZAL
  */
-public class Dashboard extends javax.swing.JPanel {
+public class DashboardPanel extends javax.swing.JPanel {
 
     private User user;
     
     /**
      * Creates new form Dashboard
      */
-    public Dashboard() {
+    public DashboardPanel() {
         initComponents();
     }
     
-    public Dashboard(User user) {
+    public DashboardPanel(User user) {
         initComponents();
         this.user = user;
         txtWelcome.setText("Welcome, " + user.getUsername() + "!!!");

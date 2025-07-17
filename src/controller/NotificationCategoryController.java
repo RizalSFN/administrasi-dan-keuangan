@@ -20,7 +20,6 @@ public class NotificationCategoryController {
     public boolean createNotificationCategory(String nama) {
         NotificationCategory notificationCategory = new NotificationCategory();
         notificationCategory.setNama(nama);
-        notificationCategory.setStatus("aktif");
 
         return notificationCategoryDAO.insertNewNotificationCategory(notificationCategory);
     }

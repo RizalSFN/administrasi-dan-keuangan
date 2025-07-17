@@ -20,7 +20,7 @@ public class NotificationController {
 
     public boolean createNotification(int notificationCategoryId, int studentId, int invoiceId, String title, String body, String destination, String status) {
         Notification notification = new Notification();
-        notification.setNotificationCategoryId(invoiceId);
+        notification.setNotificationCategoryId(notificationCategoryId);
         notification.setStudentId(studentId);
         notification.setInvoiceId(invoiceId);
         notification.setTitle(title);
@@ -47,5 +47,9 @@ public class NotificationController {
 
     public Notification getNotificationByStatus(String status) {
         return notificationDAO.findByStatus(status);
+    }
+    
+    public int getTotalNotificationByStatus(String status) {
+        return notificationDAO.findByJumlahStatus(status);
     }
 }

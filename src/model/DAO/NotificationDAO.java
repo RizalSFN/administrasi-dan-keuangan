@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NotificationDAO {
+
     private Connection conn;
 
     public NotificationDAO(Connection conn) {
@@ -16,7 +17,7 @@ public class NotificationDAO {
     }
 
     public boolean insertNewNotification(Notification notification) {
-        String sql = "INSERT INTO notification (notification_category_id, student_id, invoice_id, title, body, destination, send_at, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO notification (notification_category_id, student_id, invoice_id, title, body, destination, send_at) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try {
             PreparedStatement stmt = conn.prepareStatement(sql);
@@ -28,7 +29,7 @@ public class NotificationDAO {
             stmt.setString(5, notification.getBody());
             stmt.setString(6, notification.getDestination());
             stmt.setTimestamp(7, Timestamp.valueOf(notification.getSendAt()));
-            stmt.setString(8, notification.getStatus());
+            // stmt.setString(8, notification.getStatus());
 
             int rowsInserted = stmt.executeUpdate();
             return rowsInserted > 0;
@@ -157,6 +158,28 @@ public class NotificationDAO {
         }
 
         return notification;
+    }
+
+    public int findByJumlahStatus(String status) {
+        int totalCount = 0;
+
+        try {
+            String sql = "SELECT COUNT(*) FROM notification WHERE status = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, status);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                totalCount = rs.getInt(1);
+            }
+            rs.close();
+            stmt.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return totalCount;
     }
 
     public boolean Notification(Notification notification) {

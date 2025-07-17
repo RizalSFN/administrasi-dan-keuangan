@@ -15,13 +15,13 @@ public class NotificationCategoryDAO {
     }
 
     public boolean insertNewNotificationCategory(NotificationCategory notificationCategory) {
-        String sql = "INSERT INTO notification_category (nama, status) VALUES (?, ?)";
+        String sql = "INSERT INTO notification_category (nama) VALUES (?)";
 
         try {
             PreparedStatement stmt = conn.prepareStatement(sql);
 
             stmt.setString(1, notificationCategory.getNama());
-            stmt.setString(2, notificationCategory.getStatus());
+//            stmt.setString(2, notificationCategory.getStatus());
 
             int rowsInserted = stmt.executeUpdate();
             return rowsInserted > 0;

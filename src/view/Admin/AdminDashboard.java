@@ -5,12 +5,16 @@
  */
 package view.Admin;
 
+import view.Admin.Cashflow.CashflowPanel;
+import view.Admin.Notification.NotificationPanel;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseMotionAdapter;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import model.User;
+import view.Admin.Notification.NotificationCategoryPanel;
 import view.Login;
 
 /**
@@ -38,14 +42,23 @@ public class AdminDashboard extends javax.swing.JFrame {
         setTitle("Administrasi dan Keuangan - Dashboard");
 
 //        panelContent.removeAll();
-        Dashboard dashboard = new Dashboard(user);
+        DashboardPanel dashboard = new DashboardPanel(user);
+        NotificationPanel notificationPanel = new NotificationPanel(this);
+        NotificationCategoryPanel notificationCategoryPanel = new NotificationCategoryPanel(this);
+        
         panelContent.add(dashboard, "Dashboard");
-
+        panelContent.add (notificationPanel, "Notifikasi");
+        panelContent.add(notificationCategoryPanel, "NotificationCategory");
+        
         CardLayout cl = (CardLayout) panelContent.getLayout();
         cl.show(panelContent, "Dashboard");
 
 //        panelContent.revalidate();
 //        panelContent.repaint();
+    }
+    
+    public JPanel getPanelContent() {
+        return panelContent;
     }
 
     /**
@@ -233,6 +246,9 @@ public class AdminDashboard extends javax.swing.JFrame {
 
         panelMenuNotifikasi.setBackground(new java.awt.Color(255, 255, 255));
         panelMenuNotifikasi.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                panelMenuNotifikasiMouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 panelMenuNotifikasiMouseEntered(evt);
             }
@@ -380,7 +396,7 @@ public class AdminDashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_panelMenuCashflowMouseExited
 
     private void panelMenuCashflowMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelMenuCashflowMouseClicked
-        Cashflow cashflow = new Cashflow(user);
+        CashflowPanel cashflow = new CashflowPanel(user);
         panelContent.add(cashflow, "Cashflow");
         
         activeMenu = "Cashflow";
@@ -450,9 +466,6 @@ public class AdminDashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_panelMenuDashboardMouseExited
 
     private void panelMenuDashboardMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelMenuDashboardMouseClicked
-        Dashboard dashboard = new Dashboard(user);
-        panelContent.add(dashboard, "Dashboard");
-        
         activeMenu = "Dashboard";
         panelMenuCashflow.setBackground(new Color(255, 255, 255));
         panelMenuLaporan.setBackground(new Color(255, 255, 255));
@@ -474,6 +487,17 @@ public class AdminDashboard extends javax.swing.JFrame {
             panelMenuPembayaran.setBackground(new Color(255, 255, 255));
         }
     }//GEN-LAST:event_panelMenuPembayaranMouseExited
+
+    private void panelMenuNotifikasiMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelMenuNotifikasiMouseClicked
+        activeMenu = "Notifikasi";
+        panelMenuCashflow.setBackground(new Color(255, 255, 255));
+        panelMenuLaporan.setBackground(new Color(255, 255, 255));
+        panelMenuNotifikasi.setBackground(new Color(204, 204, 204));
+        panelMenuDashboard.setBackground(new Color(255, 255, 255));
+
+        CardLayout cl = (CardLayout) panelContent.getLayout();
+        cl.show(panelContent, "Notifikasi");
+    }//GEN-LAST:event_panelMenuNotifikasiMouseClicked
 
     /**
      * @param args the command line arguments
