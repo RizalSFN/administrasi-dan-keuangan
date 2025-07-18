@@ -7,8 +7,14 @@ package view.Admin.Notification;
 
 import controller.NotificationCategoryController;
 import java.awt.CardLayout;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 import view.Admin.AdminDashboard;
+import java.util.List;
+import model.NotificationCategory;
 
 /**
  *
@@ -24,6 +30,50 @@ public class NotificationCategoryPanel extends javax.swing.JPanel {
     public NotificationCategoryPanel(AdminDashboard adminDashboard) {
         initComponents();
         this.adminDashboard = adminDashboard;
+        tampilDataKategori();
+    }
+
+    private void tampilDataKategori() {
+        NotificationCategoryController controller = new NotificationCategoryController();
+        List<NotificationCategory> kategoriList = controller.getAllNotificationCategories();
+
+        // Siapkan kolom
+        String[] kolom = {"ID", "Nama", "Status"};
+        DefaultTableModel model = new DefaultTableModel(null, kolom);
+
+        // Tambahkan baris
+        for (NotificationCategory nc : kategoriList) {
+            Object[] row = {
+                nc.getId(),
+                nc.getNama(),
+                nc.getStatus()
+            };
+            model.addRow(row);
+        }
+
+        tabelKategoriNotifikasi.setModel(model);
+    }
+
+    private void filterDataKategori() {
+        String selectedStatus = cmbStatus.getSelectedItem().toString();
+        String namaSearch = txtNama.getText().trim();
+
+        NotificationCategoryController controller = new NotificationCategoryController();
+        List<NotificationCategory> kategoriList = controller.getFilteredNotificationCategories(selectedStatus, namaSearch);
+
+        String[] kolom = {"ID", "Nama", "Status"};
+        DefaultTableModel model = new DefaultTableModel(null, kolom);
+
+        for (NotificationCategory nc : kategoriList) {
+            Object[] row = {
+                nc.getId(),
+                nc.getNama(),
+                nc.getStatus()
+            };
+            model.addRow(row);
+        }
+
+        tabelKategoriNotifikasi.setModel(model);
     }
 
     /**
@@ -35,21 +85,35 @@ public class NotificationCategoryPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        btnSimpan2 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        txtNamaKategori = new javax.swing.JTextField();
-        btnSimpan = new javax.swing.JButton();
+        txtNama = new javax.swing.JTextField();
+        btnUbah = new javax.swing.JButton();
         btnKembali = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
+        cmbStatus = new javax.swing.JComboBox<>();
+        btnSimpan = new javax.swing.JButton();
+        btnCari = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tabelKategoriNotifikasi = new javax.swing.JTable();
+
+        btnSimpan2.setText("Simpan");
+        btnSimpan2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSimpan2ActionPerformed(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        jLabel1.setText("TAMBAH KATEGORI NOTIFIKASI");
+        jLabel1.setText("KATEGORI NOTIFIKASI");
 
         jLabel2.setText("Nama");
 
-        btnSimpan.setText("Simpan");
-        btnSimpan.addActionListener(new java.awt.event.ActionListener() {
+        btnUbah.setText("Ubah");
+        btnUbah.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSimpanActionPerformed(evt);
+                btnUbahActionPerformed(evt);
             }
         });
 
@@ -60,41 +124,102 @@ public class NotificationCategoryPanel extends javax.swing.JPanel {
             }
         });
 
+        jLabel3.setText("Status");
+
+        cmbStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "semua", "aktif", "nonaktif" }));
+
+        btnSimpan.setText("Simpan");
+        btnSimpan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSimpanActionPerformed(evt);
+            }
+        });
+
+        btnCari.setText("Cari");
+        btnCari.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCariActionPerformed(evt);
+            }
+        });
+
+        tabelKategoriNotifikasi.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        tabelKategoriNotifikasi.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tabelKategoriNotifikasiMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tabelKategoriNotifikasi);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(300, 300, 300)
+                .addComponent(jLabel1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(59, 59, 59)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(264, 264, 264)
-                        .addComponent(jLabel1))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(251, 251, 251)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtNama, javax.swing.GroupLayout.PREFERRED_SIZE, 319, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnKembali, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btnSimpan, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(txtNamaKategori, javax.swing.GroupLayout.PREFERRED_SIZE, 319, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel2)))))
-                .addContainerGap(250, Short.MAX_VALUE))
+                                .addComponent(jLabel3)
+                                .addGap(70, 70, 70))
+                            .addComponent(cmbStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(39, 39, 39)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnSimpan, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnKembali, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnUbah, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnCari, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addComponent(jScrollPane1))
+                .addGap(48, 48, 48))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(32, 32, 32)
+                .addGap(23, 23, 23)
                 .addComponent(jLabel1)
-                .addGap(85, 85, 85)
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(txtNamaKategori, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(71, 71, 71)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnSimpan)
-                    .addComponent(btnKembali))
-                .addContainerGap(217, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(txtNama, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnKembali)
+                            .addComponent(btnSimpan))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnUbah)
+                            .addComponent(btnCari)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(cmbStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(27, 27, 27)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 319, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(28, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -103,8 +228,42 @@ public class NotificationCategoryPanel extends javax.swing.JPanel {
         cl.show(adminDashboard.getPanelContent(), "Notifikasi");
     }//GEN-LAST:event_btnKembaliActionPerformed
 
+    private void btnUbahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUbahActionPerformed
+        int selectedRow = tabelKategoriNotifikasi.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Pilih data yang mau diubah dulu!");
+            return;
+        }
+
+        int id = (int) tabelKategoriNotifikasi.getValueAt(selectedRow, 0);
+        String newNama = txtNama.getText().trim();
+        String newStatus = cmbStatus.getSelectedItem().toString().toLowerCase();
+
+        if (newNama.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Nama kategori tidak boleh kosong!");
+            return;
+        }
+
+        NotificationCategory nc = new NotificationCategory();
+        nc.setId(id);
+        nc.setNama(newNama);
+        nc.setStatus(newStatus);
+
+        NotificationCategoryController controller = new NotificationCategoryController();
+        boolean success = controller.updateNotificationCategory(nc);
+
+        if (success) {
+            JOptionPane.showMessageDialog(this, "Kategori berhasil diubah!");
+            tampilDataKategori(); // refresh tabel
+            txtNama.setText("");
+            cmbStatus.setSelectedIndex(0);
+        } else {
+            JOptionPane.showMessageDialog(this, "Gagal mengubah kategori!");
+        }
+    }//GEN-LAST:event_btnUbahActionPerformed
+
     private void btnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpanActionPerformed
-        String namaKategori = txtNamaKategori.getText().trim();
+        String namaKategori = txtNama.getText().trim();
 
         if (namaKategori.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Nama kategori tidak boleh kosong!");
@@ -115,22 +274,43 @@ public class NotificationCategoryPanel extends javax.swing.JPanel {
         boolean success = controller.createNotificationCategory(namaKategori);
 
         if (success) {
+            tampilDataKategori();
             JOptionPane.showMessageDialog(this, "Kategori notifikasi berhasil disimpan!");
-
-            // Kembali ke panel Notifikasi
-            CardLayout cl = (CardLayout) adminDashboard.getPanelContent().getLayout();
-            cl.show(adminDashboard.getPanelContent(), "Notifikasi");
         } else {
             JOptionPane.showMessageDialog(this, "Gagal menyimpan kategori notifikasi!");
         }
     }//GEN-LAST:event_btnSimpanActionPerformed
 
+    private void btnSimpan2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpan2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnSimpan2ActionPerformed
+
+    private void btnCariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCariActionPerformed
+        filterDataKategori();
+    }//GEN-LAST:event_btnCariActionPerformed
+
+    private void tabelKategoriNotifikasiMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelKategoriNotifikasiMouseClicked
+        int selectedRow = tabelKategoriNotifikasi.getSelectedRow();
+        if (selectedRow != -1) {
+            txtNama.setText(tabelKategoriNotifikasi.getValueAt(selectedRow, 1).toString());
+            String status = tabelKategoriNotifikasi.getValueAt(selectedRow, 2).toString();
+            cmbStatus.setSelectedItem(status);
+        }
+    }//GEN-LAST:event_tabelKategoriNotifikasiMouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCari;
     private javax.swing.JButton btnKembali;
     private javax.swing.JButton btnSimpan;
+    private javax.swing.JButton btnSimpan2;
+    private javax.swing.JButton btnUbah;
+    private javax.swing.JComboBox<String> cmbStatus;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JTextField txtNamaKategori;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable tabelKategoriNotifikasi;
+    private javax.swing.JTextField txtNama;
     // End of variables declaration//GEN-END:variables
 }

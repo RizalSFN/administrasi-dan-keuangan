@@ -4,8 +4,10 @@ import model.NotificationCategory;
 import model.DAO.NotificationCategoryDAO;
 import config.DatabaseConnection;
 import java.sql.Connection;
+import java.util.List;
 
 public class NotificationCategoryController {
+
     private NotificationCategoryDAO notificationCategoryDAO;
 
     public NotificationCategoryController() {
@@ -24,8 +26,12 @@ public class NotificationCategoryController {
         return notificationCategoryDAO.insertNewNotificationCategory(notificationCategory);
     }
 
-    public NotificationCategory getNotificationCategoryByStatus(String status) {
-        return notificationCategoryDAO.findByStatus(status);
+    public List<NotificationCategory> getAllNotificationCategories() {
+        return notificationCategoryDAO.getAllNotificationCategories();
+    }
+
+    public List<NotificationCategory> getFilteredNotificationCategories(String status, String nama) {
+        return notificationCategoryDAO.getFilteredNotificationCategories(status, nama);
     }
 
     public boolean updateNotificationCategory(NotificationCategory notificationCategory) {

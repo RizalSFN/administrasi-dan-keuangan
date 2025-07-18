@@ -62,11 +62,8 @@ public class NotificationPanel extends javax.swing.JPanel {
         jLabel10 = new javax.swing.JLabel();
         jumlahGagal = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
-        btnCreateCategory = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        tabelNotifikasi = new javax.swing.JTable();
-        btnCreateNotification = new javax.swing.JButton();
-        btnSearchNotification = new javax.swing.JButton();
+        btnKategoriNotifikasi = new javax.swing.JButton();
+        btnNotifikasi = new javax.swing.JButton();
 
         jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/notification-icon.png"))); // NOI18N
 
@@ -190,29 +187,19 @@ public class NotificationPanel extends javax.swing.JPanel {
                 .addContainerGap(14, Short.MAX_VALUE))
         );
 
-        btnCreateCategory.setText("Buat Kategori Notifikasi");
-        btnCreateCategory.addActionListener(new java.awt.event.ActionListener() {
+        btnKategoriNotifikasi.setText("Lihat Kategori Notifikasi");
+        btnKategoriNotifikasi.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCreateCategoryActionPerformed(evt);
+                btnKategoriNotifikasiActionPerformed(evt);
             }
         });
 
-        tabelNotifikasi.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+        btnNotifikasi.setText("Lihat Notifikasi");
+        btnNotifikasi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNotifikasiActionPerformed(evt);
             }
-        ));
-        jScrollPane1.setViewportView(tabelNotifikasi);
-
-        btnCreateNotification.setText("Buat Notifikasi");
-
-        btnSearchNotification.setText("Cari Notifikasi");
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -220,23 +207,17 @@ public class NotificationPanel extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(32, 32, 32)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnNotifikasi, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnKategoriNotifikasi, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnCreateNotification, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnCreateCategory, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(btnSearchNotification, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(35, Short.MAX_VALUE))
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(36, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -248,29 +229,29 @@ public class NotificationPanel extends javax.swing.JPanel {
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(47, 47, 47)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnCreateCategory)
-                    .addComponent(btnSearchNotification)
-                    .addComponent(btnCreateNotification))
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(60, Short.MAX_VALUE))
+                    .addComponent(btnKategoriNotifikasi)
+                    .addComponent(btnNotifikasi))
+                .addContainerGap(318, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnCreateCategoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateCategoryActionPerformed
+    private void btnKategoriNotifikasiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKategoriNotifikasiActionPerformed
         NotificationCategoryPanel notificationCategoryPanel = new NotificationCategoryPanel(adminDashboard);
 
         adminDashboard.getPanelContent().add(notificationCategoryPanel, "NotificationCategory");
 
         CardLayout cl = (CardLayout) adminDashboard.getPanelContent().getLayout();
         cl.show(adminDashboard.getPanelContent(), "NotificationCategory");
-    }//GEN-LAST:event_btnCreateCategoryActionPerformed
+    }//GEN-LAST:event_btnKategoriNotifikasiActionPerformed
+
+    private void btnNotifikasiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNotifikasiActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnNotifikasiActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnCreateCategory;
-    private javax.swing.JButton btnCreateNotification;
-    private javax.swing.JButton btnSearchNotification;
+    private javax.swing.JButton btnKategoriNotifikasi;
+    private javax.swing.JButton btnNotifikasi;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -283,10 +264,8 @@ public class NotificationPanel extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel jumlahGagal;
     private javax.swing.JLabel jumlahPending;
     private javax.swing.JLabel jumlahTerkirim;
-    private javax.swing.JTable tabelNotifikasi;
     // End of variables declaration//GEN-END:variables
 }

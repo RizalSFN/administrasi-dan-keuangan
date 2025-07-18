@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NotificationCategoryDAO {
+
     private Connection conn;
 
     public NotificationCategoryDAO(Connection conn) {
@@ -32,29 +33,65 @@ public class NotificationCategoryDAO {
         }
     }
 
-    public NotificationCategory findByStatus(String status) {
-        NotificationCategory notificationCategory = null;
+    public List<NotificationCategory> getAllNotificationCategories() {
+        List<NotificationCategory> list = new ArrayList<>();
+        String sql = "SELECT id, nama, status FROM notification_category";
 
         try {
-            String sql = "SELECT * FROM notification_category WHERE status = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setString(1, status);
             ResultSet rs = stmt.executeQuery();
 
-            if (rs.next()) {
-                notificationCategory = new NotificationCategory();
-                notificationCategory.setId(rs.getInt("id"));
-                notificationCategory.setNama(rs.getString("nama"));
-                notificationCategory.setStatus(rs.getString("status"));
+            while (rs.next()) {
+                NotificationCategory nc = new NotificationCategory();
+                nc.setId(rs.getInt("id"));
+                nc.setNama(rs.getString("nama"));
+                nc.setStatus(rs.getString("status"));
+                list.add(nc);
             }
-            rs.close();
-            stmt.close();
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return notificationCategory;
+        return list;
+    }
+
+    public List<NotificationCategory> getFilteredNotificationCategories(String status, String nama) {
+        List<NotificationCategory> list = new ArrayList<>();
+        String sql = "SELECT id, nama, status FROM notification_category WHERE 1=1";
+
+        if (!status.equalsIgnoreCase("Semua")) {
+            sql += " AND status = ?";
+        }
+        if (nama != null && !nama.trim().isEmpty()) {
+            sql += " AND nama LIKE ?";
+        }
+
+        try {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+
+            int index = 1;
+            if (!status.equalsIgnoreCase("Semua")) {
+                stmt.setString(index++, status.toLowerCase()); // asumsi status disimpan lowercase
+            }
+            if (nama != null && !nama.trim().isEmpty()) {
+                stmt.setString(index++, "%" + nama + "%");
+            }
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                NotificationCategory nc = new NotificationCategory();
+                nc.setId(rs.getInt("id"));
+                nc.setNama(rs.getString("nama"));
+                nc.setStatus(rs.getString("status"));
+                list.add(nc);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
     }
 
     public boolean updateNotificationCategory(NotificationCategory notificationCategory) {
@@ -83,7 +120,7 @@ public class NotificationCategoryDAO {
         try {
             PreparedStatement stmt = conn.prepareStatement(sql.toString());
 
-            for (int i = 1; i < params.size(); i++) {
+            for (int i = 0; i < params.size(); i++) {
                 stmt.setObject(i + 1, params.get(i));
             }
 
