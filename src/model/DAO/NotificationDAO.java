@@ -40,25 +40,45 @@ public class NotificationDAO {
         }
     }
 
-    public Notification findByNotificationCategoryId(int notification_category_id) {
-        Notification notification = null;
+    public List<Notification> getNotifications(String status, String studentName) {
+        List<Notification> list = new ArrayList<>();
+
+        String sql = "SELECT n.*, s.nama as student_name FROM notification n "
+                + "JOIN student s ON n.student_id = s.id WHERE 1=1";
+
+        if (status != null && !status.equalsIgnoreCase("Semua")) {
+            sql += " AND n.status = ?";
+        }
+        if (studentName != null && !studentName.trim().isEmpty()) {
+            sql += " AND s.nama LIKE ?";
+        }
 
         try {
-            String sql = "SELECT * FROM notification WHERE notification_category_id = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setInt(1, notification_category_id);
-            ResultSet rs = stmt.executeQuery();
 
-            if (rs.next()) {
-                notification = new Notification();
-                notification.setId(rs.getInt("notification_category_id"));
-                notification.setStudentId(rs.getInt("student_id"));
-                notification.setInvoiceId(rs.getInt("invoice_id"));
-                notification.setTitle(rs.getString("title"));
-                notification.setBody(rs.getString("body"));
-                notification.setDestination(rs.getString("destination"));
-                notification.setSendAt(rs.getTimestamp("send_at").toLocalDateTime());
-                notification.setStatus(rs.getString("status"));
+            int index = 1;
+            if (status != null && !status.equalsIgnoreCase("Semua")) {
+                stmt.setString(index++, status);
+            }
+            if (studentName != null && !studentName.trim().isEmpty()) {
+                stmt.setString(index++, "%" + studentName + "%");
+            }
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Notification n = new Notification();
+                n.setId(rs.getInt("id"));
+                n.setNotificationCategoryId(rs.getInt("notification_category_id"));
+                n.setStudentId(rs.getInt("student_id"));
+                n.setInvoiceId(rs.getInt("invoice_id"));
+                n.setTitle(rs.getString("title"));
+                n.setBody(rs.getString("body"));
+                n.setDestination(rs.getString("destination"));
+                n.setSendAt(rs.getTimestamp("send_at").toLocalDateTime());
+                n.setStatus(rs.getString("status"));
+                n.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+                n.setStudentName(rs.getString("student_name")); 
+                list.add(n);
             }
             rs.close();
             stmt.close();
@@ -67,7 +87,7 @@ public class NotificationDAO {
             e.printStackTrace();
         }
 
-        return notification;
+        return list;
     }
 
     public Notification findByStudentId(int student_id) {
@@ -182,7 +202,7 @@ public class NotificationDAO {
         return totalCount;
     }
 
-    public boolean Notification(Notification notification) {
+    public boolean updateNotification(Notification notification) {
         StringBuilder sql = new StringBuilder("UPDATE notification SET ");
         List<Object> params = new ArrayList<>();
 
@@ -233,7 +253,7 @@ public class NotificationDAO {
         try {
             PreparedStatement stmt = conn.prepareStatement(sql.toString());
 
-            for (int i = 1; i < params.size(); i++) {
+            for (int i = 0; i < params.size(); i++) {
                 stmt.setObject(i + 1, params.get(i));
             }
 
