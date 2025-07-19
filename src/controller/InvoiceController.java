@@ -3,32 +3,46 @@ package controller;
 import config.DatabaseConnection;
 import java.sql.Connection;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
 import model.Invoice;
 import model.DAO.InvoiceDAO;
+import model.DAO.StudentDAO;
 
 public class InvoiceController {
+
     private InvoiceDAO invoiceDAO;
+    private StudentDAO studentDAO;
 
     public InvoiceController() {
         try {
             Connection conn = DatabaseConnection.getConnection();
             invoiceDAO = new InvoiceDAO(conn);
+            studentDAO = new StudentDAO(conn);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public boolean createInvoice(int student_id, float jumlah) {
-        LocalDate nextMonth = LocalDate.now().plusMonths(1);
-        LocalDate tanggalJatuhTempo = nextMonth.withDayOfMonth(nextMonth.lengthOfMonth());
+    public boolean createInvoiceByNisn(String nisn, float jumlah, LocalDate tanggalJatuhTempo) {
+        int studentId = studentDAO.findStudentIdByNisn(nisn);
+
+        if (studentId == -1) {
+            System.out.println("Siswa dengan NISN tidak ditemukan.");
+            return false;
+        }
 
         Invoice invoice = new Invoice();
-        invoice.setStudentId(student_id);
+        invoice.setStudentId(studentId);
         invoice.setJumlah(jumlah);
         invoice.setTanggalJatuhTempo(tanggalJatuhTempo);
         invoice.setStatus("belum lunas");
 
         return invoiceDAO.insertNewInvoice(invoice);
+    }
+
+    public List<Map<String, Object>> getAllInvoices(String status, String nisn) {
+        return invoiceDAO.getAllInvoiceWithStudent(status, nisn);
     }
 
     public boolean updateInvoice(Invoice invoice) {
