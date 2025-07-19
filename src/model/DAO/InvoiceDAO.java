@@ -6,7 +6,9 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class InvoiceDAO {
 
@@ -17,7 +19,7 @@ public class InvoiceDAO {
     }
 
     public boolean insertNewInvoice(Invoice invoice) {
-        String sql = "INSERT INTO invoice (student_id, jumlah, tanggal_jatuh_tempo, status) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO invoice (student_id, jumlah, tanggal_jatuh_tempo, status) VALUES (?, ?, ?, ?)";
 
         try {
             PreparedStatement stmt = conn.prepareStatement(sql);
@@ -33,6 +35,81 @@ public class InvoiceDAO {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public List<Map<String, Object>> getAllInvoiceWithStudent(String status, String nisn) {
+        List<Map<String, Object>> result = new ArrayList<>();
+
+        try {
+            String sql = "SELECT i.id, s.nama_lengkap AS student_name, s.nisn, i.jumlah, i.tanggal_jatuh_tempo, i.status "
+                    + "FROM invoice i "
+                    + "JOIN student s ON i.student_id = s.id "
+                    + "WHERE 1=1 "; 
+
+            if (status != null && !status.trim().isEmpty() && !status.equalsIgnoreCase("Semua")) {
+                sql += " AND i.status = ?";
+            }
+
+            if (nisn != null && !nisn.trim().isEmpty()) {
+                sql += " AND s.nisn LIKE ?";
+            }
+
+            PreparedStatement stmt = conn.prepareStatement(sql);
+
+            int index = 1;
+            if (status != null && !status.trim().isEmpty() && !status.equalsIgnoreCase("Semua")) {
+                stmt.setString(index++, status);
+            }
+
+            if (nisn != null && !nisn.trim().isEmpty()) {
+                stmt.setString(index++, "%" + nisn + "%");
+            }
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Map<String, Object> row = new HashMap<>();
+                row.put("id", rs.getInt("id"));
+                row.put("student_name", rs.getString("student_name"));
+                row.put("nisn", rs.getString("nisn"));
+                row.put("jumlah", rs.getFloat("jumlah"));
+                row.put("tanggal_jatuh_tempo", rs.getDate("tanggal_jatuh_tempo").toString());
+                row.put("status", rs.getString("status"));
+                result.add(row);
+            }
+
+            rs.close();
+            stmt.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
+    public int findStudentIdByNisn(String nisn) {
+        int studentId = -1;
+
+        try {
+            String sql = "SELECT id FROM student WHERE nisn = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, nisn);
+
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                studentId = rs.getInt("id");
+            }
+
+            rs.close();
+            stmt.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return studentId;
     }
 
     public int findById(int id) {
