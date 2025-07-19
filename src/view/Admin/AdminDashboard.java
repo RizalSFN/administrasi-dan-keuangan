@@ -15,6 +15,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import model.User;
 import view.Admin.Notification.NotificationCategoryPanel;
+import view.Admin.Notification.NotificationDataPanel;
+import view.Admin.Pembayaran.FormInvoicePanel;
+import view.Admin.Pembayaran.PembayaranInvoicePanel;
+import view.Admin.Pembayaran.PembayaranPanel;
 import view.Login;
 
 /**
@@ -26,6 +30,7 @@ public class AdminDashboard extends javax.swing.JFrame {
     private User user;
 
     private String activeMenu = "Dashboard";
+    private PembayaranInvoicePanel pembayaranInvoicePanel;
 
     /**
      * Creates new form AdminDashboard
@@ -45,20 +50,35 @@ public class AdminDashboard extends javax.swing.JFrame {
         DashboardPanel dashboard = new DashboardPanel(user);
         NotificationPanel notificationPanel = new NotificationPanel(this);
         NotificationCategoryPanel notificationCategoryPanel = new NotificationCategoryPanel(this);
-        
+        NotificationDataPanel notificationDataPanel = new NotificationDataPanel(this);
+        PembayaranPanel pembayaranPanel = new PembayaranPanel(this);
+        pembayaranInvoicePanel = new PembayaranInvoicePanel(this);
+        FormInvoicePanel formInvoicePanel = new FormInvoicePanel(this);
+
+        pembayaranInvoicePanel = new PembayaranInvoicePanel(this);
+        panelContent.add(pembayaranInvoicePanel, "PembayaranInvoice");
+
         panelContent.add(dashboard, "Dashboard");
-        panelContent.add (notificationPanel, "Notifikasi");
+        panelContent.add(notificationPanel, "Notifikasi");
         panelContent.add(notificationCategoryPanel, "NotificationCategory");
-        
+        panelContent.add(notificationDataPanel, "NotificationData");
+        panelContent.add(pembayaranPanel, "Pembayaran");
+        panelContent.add(pembayaranInvoicePanel, "PembayaranInvoice");
+        panelContent.add(formInvoicePanel, "FormInvoice");
+
         CardLayout cl = (CardLayout) panelContent.getLayout();
         cl.show(panelContent, "Dashboard");
 
 //        panelContent.revalidate();
 //        panelContent.repaint();
     }
-    
+
     public JPanel getPanelContent() {
         return panelContent;
+    }
+
+    public PembayaranInvoicePanel getPembayaranInvoicePanel() {
+        return pembayaranInvoicePanel;
     }
 
     /**
@@ -284,6 +304,9 @@ public class AdminDashboard extends javax.swing.JFrame {
 
         panelMenuPembayaran.setBackground(new java.awt.Color(255, 255, 255));
         panelMenuPembayaran.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                panelMenuPembayaranMouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 panelMenuPembayaranMouseEntered(evt);
             }
@@ -398,12 +421,13 @@ public class AdminDashboard extends javax.swing.JFrame {
     private void panelMenuCashflowMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelMenuCashflowMouseClicked
         CashflowPanel cashflow = new CashflowPanel(user);
         panelContent.add(cashflow, "Cashflow");
-        
+
         activeMenu = "Cashflow";
         panelMenuDashboard.setBackground(new Color(255, 255, 255));
         panelMenuLaporan.setBackground(new Color(255, 255, 255));
         panelMenuNotifikasi.setBackground(new Color(255, 255, 255));
         panelMenuCashflow.setBackground(new Color(204, 204, 204));
+        panelMenuPembayaran.setBackground(new Color(255, 255, 255));
 
         CardLayout cl = (CardLayout) panelContent.getLayout();
         cl.show(panelContent, "Cashflow");
@@ -471,19 +495,20 @@ public class AdminDashboard extends javax.swing.JFrame {
         panelMenuLaporan.setBackground(new Color(255, 255, 255));
         panelMenuNotifikasi.setBackground(new Color(255, 255, 255));
         panelMenuDashboard.setBackground(new Color(204, 204, 204));
+        panelMenuPembayaran.setBackground(new Color(255, 255, 255));
 
         CardLayout cl = (CardLayout) panelContent.getLayout();
         cl.show(panelContent, "Dashboard");
     }//GEN-LAST:event_panelMenuDashboardMouseClicked
 
     private void panelMenuPembayaranMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelMenuPembayaranMouseEntered
-        if (activeMenu != "Notifikasi") {
+        if (activeMenu != "Pembayaran") {
             panelMenuPembayaran.setBackground(new Color(204, 204, 204));
         }
     }//GEN-LAST:event_panelMenuPembayaranMouseEntered
 
     private void panelMenuPembayaranMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelMenuPembayaranMouseExited
-        if (activeMenu != "Notifikasi") {
+        if (activeMenu != "Pembayaran") {
             panelMenuPembayaran.setBackground(new Color(255, 255, 255));
         }
     }//GEN-LAST:event_panelMenuPembayaranMouseExited
@@ -494,10 +519,23 @@ public class AdminDashboard extends javax.swing.JFrame {
         panelMenuLaporan.setBackground(new Color(255, 255, 255));
         panelMenuNotifikasi.setBackground(new Color(204, 204, 204));
         panelMenuDashboard.setBackground(new Color(255, 255, 255));
+        panelMenuPembayaran.setBackground(new Color(255, 255, 255));
 
         CardLayout cl = (CardLayout) panelContent.getLayout();
         cl.show(panelContent, "Notifikasi");
     }//GEN-LAST:event_panelMenuNotifikasiMouseClicked
+
+    private void panelMenuPembayaranMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelMenuPembayaranMouseClicked
+        activeMenu = "Pembayaran";
+        panelMenuCashflow.setBackground(new Color(255, 255, 255));
+        panelMenuLaporan.setBackground(new Color(255, 255, 255));
+        panelMenuNotifikasi.setBackground(new Color(255, 255, 255));
+        panelMenuDashboard.setBackground(new Color(255, 255, 255));
+        panelMenuPembayaran.setBackground(new Color(204, 204, 204));
+
+        CardLayout cl = (CardLayout) panelContent.getLayout();
+        cl.show(panelContent, "Pembayaran");
+    }//GEN-LAST:event_panelMenuPembayaranMouseClicked
 
     /**
      * @param args the command line arguments

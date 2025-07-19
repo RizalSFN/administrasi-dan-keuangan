@@ -245,7 +245,12 @@ public class NotificationPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btnKategoriNotifikasiActionPerformed
 
     private void btnNotifikasiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNotifikasiActionPerformed
-        // TODO add your handling code here:
+        NotificationDataPanel notificationDataPanel = new NotificationDataPanel(adminDashboard);
+        
+        adminDashboard.getPanelContent().add(notificationDataPanel, "NotificationData");
+        
+        CardLayout cl = (CardLayout) adminDashboard.getPanelContent().getLayout();
+        cl.show(adminDashboard.getPanelContent(), "NotificationData");
     }//GEN-LAST:event_btnNotifikasiActionPerformed
 
 

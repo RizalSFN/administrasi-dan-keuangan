@@ -57,16 +57,17 @@ public class NotificationCategoryPanel extends javax.swing.JPanel {
     private void filterDataKategori() {
         String selectedStatus = cmbStatus.getSelectedItem().toString();
         String namaSearch = txtNama.getText().trim();
+        int nomor = 0;
 
         NotificationCategoryController controller = new NotificationCategoryController();
         List<NotificationCategory> kategoriList = controller.getFilteredNotificationCategories(selectedStatus, namaSearch);
 
-        String[] kolom = {"ID", "Nama", "Status"};
+        String[] kolom = {"No", "Nama", "Status"};
         DefaultTableModel model = new DefaultTableModel(null, kolom);
 
         for (NotificationCategory nc : kategoriList) {
             Object[] row = {
-                nc.getId(),
+                nomor++,
                 nc.getNama(),
                 nc.getStatus()
             };
