@@ -90,6 +90,28 @@ public class StudentDAO {
         return student;
     }
 
+    public int findStudentIdByNisn(String nisn) {
+        int studentId = -1;
+
+        try {
+            String sql = "SELECT id FROM student WHERE nisn = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, nisn);
+
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                studentId = rs.getInt("id");
+            }
+
+            rs.close();
+            stmt.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return studentId;
+    }
+
     public Student findByNisn(String nisn) {
         Student student = null;
 
