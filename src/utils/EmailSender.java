@@ -35,12 +35,12 @@ public class EmailSender {
             e.printStackTrace();
         }
     }
-    
+
     public static void main(String[] args) {
         String testEmail = "rizalsofiana1976@gmail.com";
         String testSubject = "TEST: Pengujian Email Sender";
-//        String testBody = "Halo! Ini adalah email uji coba dari aplikasi Java kamu.";
-        
+        // String testBody = "Halo! Ini adalah email uji coba dari aplikasi Java kamu.";
+
         String testBody = "Halo, ini adalah tagihan pembayaran sekolah untuk siswa dengan identitas sebagai berikut : \n\n"
                 + "Nama : Rizal Sofiana \n"
                 + "Kelas : 12 IPA 3 \n"
