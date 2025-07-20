@@ -139,7 +139,6 @@ public class PembayaranPanel extends javax.swing.JPanel {
     private javax.swing.JButton btnInvoice;
     private javax.swing.JButton btnPayment;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     // End of variables declaration//GEN-END:variables

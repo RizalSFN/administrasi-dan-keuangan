@@ -10,7 +10,9 @@ import controller.NotificationController;
 import java.awt.CardLayout;
 import java.util.List;
 import java.util.Map;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import model.Invoice;
 import model.Notification;
 import view.Admin.AdminDashboard;
 
@@ -32,36 +34,57 @@ public class PembayaranInvoicePanel extends javax.swing.JPanel {
     }
 
     public void tampilDataInvoice() {
-        String status = cmbStatus.getSelectedItem().toString();
-        String nisn = txtCari.getText().trim();
+        InvoiceController controller = new InvoiceController();
+        List<Invoice> invoiceList = controller.getFilteredInvoices(null, null);
 
-        if (status.equalsIgnoreCase("Semua")) {
-            status = null;
+        String[] kolom = {"ID", "No", "Siswa", "NISN", "Jumlah", "Tanggal Jatuh Tempo", "Status"};
+        DefaultTableModel model = new DefaultTableModel(null, kolom);
+
+        int nomor = 1;
+        for (Invoice inv : invoiceList) {
+            Object[] row = {
+                inv.getId(),
+                nomor++,
+                inv.getStudentName(),
+                inv.getStudentNisn(),
+                inv.getJumlah(),
+                inv.getTanggalJatuhTempo(),
+                inv.getStatus()
+            };
+            model.addRow(row);
         }
+
+        tabelInvoice.getColumnModel().getColumn(0).setMinWidth(0);
+        tabelInvoice.getColumnModel().getColumn(0).setMaxWidth(0);
+        tabelInvoice.setModel(model);
+    }
+
+    public void filterDataInvoice() {
+        String selectedStatus = cmbStatus.getSelectedItem().toString();
+        String nisnSearch = txtCari.getText().trim();
 
         InvoiceController controller = new InvoiceController();
-        List<Map<String, Object>> invoiceList = controller.getAllInvoices(status, nisn);
+        List<Invoice> invoiceList = controller.getFilteredInvoices(selectedStatus, nisnSearch);
 
-        DefaultTableModel model = new DefaultTableModel();
-        model.addColumn("No");
-        model.addColumn("Siswa");
-        model.addColumn("NISN");
-        model.addColumn("Jumlah");
-        model.addColumn("Tanggal Jatuh Tempo");
-        model.addColumn("Status");
+        String[] kolom = {"ID", "No", "Siswa", "NISN", "Jumlah", "Tanggal Jatuh Tempo", "Status"};
+        DefaultTableModel model = new DefaultTableModel(null, kolom);
 
-        int no = 1;
-        for (Map<String, Object> invoice : invoiceList) {
-            model.addRow(new Object[]{
-                no++,
-                invoice.get("student_name"),
-                invoice.get("nisn"),
-                invoice.get("jumlah"),
-                invoice.get("tanggal_jatuh_tempo"),
-                invoice.get("status")
-            });
+        int nomor = 1;
+        for (Invoice inv : invoiceList) {
+            Object[] row = {
+                inv.getId(),
+                nomor++,
+                inv.getStudentName(),
+                inv.getStudentNisn(),
+                inv.getJumlah(),
+                inv.getTanggalJatuhTempo(),
+                inv.getStatus()
+            };
+            model.addRow(row);
         }
 
+        tabelInvoice.getColumnModel().getColumn(0).setMinWidth(0);
+        tabelInvoice.getColumnModel().getColumn(0).setMaxWidth(0);
         tabelInvoice.setModel(model);
     }
 
@@ -82,6 +105,7 @@ public class PembayaranInvoicePanel extends javax.swing.JPanel {
         txtCari = new javax.swing.JTextField();
         cmbStatus = new javax.swing.JComboBox<>();
         btnTambah = new javax.swing.JButton();
+        btnBayar = new javax.swing.JButton();
 
         jLabel1.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         jLabel1.setText("INVOICE");
@@ -107,6 +131,11 @@ public class PembayaranInvoicePanel extends javax.swing.JPanel {
         });
 
         btnCari.setText("Cari");
+        btnCari.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCariActionPerformed(evt);
+            }
+        });
 
         cmbStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Semua", "lunas", "belum lunas", "terlambat" }));
         cmbStatus.addActionListener(new java.awt.event.ActionListener() {
@@ -119,6 +148,13 @@ public class PembayaranInvoicePanel extends javax.swing.JPanel {
         btnTambah.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnTambahActionPerformed(evt);
+            }
+        });
+
+        btnBayar.setText("Bayar");
+        btnBayar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBayarActionPerformed(evt);
             }
         });
 
@@ -138,6 +174,8 @@ public class PembayaranInvoicePanel extends javax.swing.JPanel {
                                 .addComponent(btnKembali)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(btnTambah)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnBayar, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(cmbStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -158,7 +196,8 @@ public class PembayaranInvoicePanel extends javax.swing.JPanel {
                     .addComponent(btnCari)
                     .addComponent(txtCari, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cmbStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnTambah))
+                    .addComponent(btnTambah)
+                    .addComponent(btnBayar))
                 .addGap(26, 26, 26)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 322, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(64, 64, 64))
@@ -176,11 +215,38 @@ public class PembayaranInvoicePanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btnTambahActionPerformed
 
     private void cmbStatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbStatusActionPerformed
-        tampilDataInvoice();
+        filterDataInvoice();
     }//GEN-LAST:event_cmbStatusActionPerformed
+
+    private void btnCariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCariActionPerformed
+        filterDataInvoice();
+    }//GEN-LAST:event_btnCariActionPerformed
+
+    private void btnBayarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBayarActionPerformed
+        int selectedRow = tabelInvoice.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Pilih data invoice dulu!");
+            return;
+        }
+
+        int invoiceId = Integer.parseInt(tabelInvoice.getValueAt(selectedRow, 0).toString());
+
+        InvoiceController controller = new InvoiceController();
+        Invoice invoice = controller.getInvoiceById(invoiceId);
+
+        if (invoice != null) {
+            FormPaymentPanel form = new FormPaymentPanel(adminDashboard, invoiceId);
+            CardLayout cl = (CardLayout) adminDashboard.getPanelContent().getLayout();
+            adminDashboard.getPanelContent().add(form, "FormPayment");
+            cl.show(adminDashboard.getPanelContent(), "FormPayment");
+        } else {
+            JOptionPane.showMessageDialog(this, "Data invoice tidak ditemukan!");
+        }
+    }//GEN-LAST:event_btnBayarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnBayar;
     private javax.swing.JButton btnCari;
     private javax.swing.JButton btnKembali;
     private javax.swing.JButton btnTambah;
