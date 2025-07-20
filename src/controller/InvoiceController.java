@@ -45,8 +45,19 @@ public class InvoiceController {
         return invoiceDAO.getAllInvoiceWithStudent(status, nisn);
     }
 
-    public boolean updateInvoice(Invoice invoice) {
+    public List<Invoice> getFilteredInvoices(String status, String nisn) {
+        return invoiceDAO.getFilteredInvoices(status, nisn);
+    }
+
+    public boolean updateInvoice(int invoiceId, String newStatus) {
+        Invoice invoice = new Invoice();
+        invoice.setId(invoiceId);
+        invoice.setStatus(newStatus);
         return invoiceDAO.updateInvoice(invoice);
+    }
+
+    public Invoice getInvoiceById(int id) {
+        return invoiceDAO.findInvoiceById(id);
     }
 
     public Invoice getInvoiceByStudentId(int student_id) {
