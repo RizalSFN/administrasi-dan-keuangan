@@ -37,6 +37,7 @@ public class PaymentDAO {
                 if (generatedKeys.next()) {
                     generatedId = generatedKeys.getInt(1);
                 }
+                generatedKeys.close();
             }
             stmt.close();
 
