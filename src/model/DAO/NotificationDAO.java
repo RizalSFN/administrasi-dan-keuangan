@@ -43,7 +43,7 @@ public class NotificationDAO {
     public List<Notification> getNotifications(String status, String studentName) {
         List<Notification> list = new ArrayList<>();
 
-        String sql = "SELECT n.*, s.nama as student_name FROM notification n "
+        String sql = "SELECT n.*, s.nama_lengkap as student_name FROM notification n "
                 + "JOIN student s ON n.student_id = s.id WHERE 1=1";
 
         if (status != null && !status.equalsIgnoreCase("Semua")) {
