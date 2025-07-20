@@ -44,7 +44,7 @@ public class InvoiceDAO {
             String sql = "SELECT i.id, s.nama_lengkap AS student_name, s.nisn, i.jumlah, i.tanggal_jatuh_tempo, i.status "
                     + "FROM invoice i "
                     + "JOIN student s ON i.student_id = s.id "
-                    + "WHERE 1=1 "; 
+                    + "WHERE 1=1 ";
 
             if (status != null && !status.trim().isEmpty() && !status.equalsIgnoreCase("Semua")) {
                 sql += " AND i.status = ?";
@@ -58,11 +58,11 @@ public class InvoiceDAO {
 
             int index = 1;
             if (status != null && !status.trim().isEmpty() && !status.equalsIgnoreCase("Semua")) {
-                stmt.setString(index++, status);
+                stmt.setString(index++, status.toLowerCase());
             }
 
             if (nisn != null && !nisn.trim().isEmpty()) {
-                stmt.setString(index++, "%" + nisn + "%");
+                stmt.setString(index++, "%" + Integer.valueOf(nisn) + "%");
             }
 
             ResultSet rs = stmt.executeQuery();
@@ -76,6 +76,60 @@ public class InvoiceDAO {
                 row.put("tanggal_jatuh_tempo", rs.getDate("tanggal_jatuh_tempo").toString());
                 row.put("status", rs.getString("status"));
                 result.add(row);
+            }
+
+            rs.close();
+            stmt.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
+    public List<Invoice> getFilteredInvoices(String status, String nisn) {
+        List<Invoice> result = new ArrayList<>();
+
+        try {
+            String sql = "SELECT i.*, s.nama_lengkap, s.nisn FROM invoice i "
+                    + "JOIN student s ON i.student_id = s.id "
+                    + "WHERE 1=1";
+
+            if (status != null && !status.equalsIgnoreCase("Semua") && !status.trim().isEmpty()) {
+                sql += " AND i.status = ?";
+            }
+
+            if (nisn != null && !nisn.trim().isEmpty()) {
+                sql += " AND s.nisn LIKE ?";
+            }
+
+            PreparedStatement stmt = conn.prepareStatement(sql);
+
+            int index = 1;
+            if (status != null && !status.equalsIgnoreCase("Semua") && !status.trim().isEmpty()) {
+                stmt.setString(index++, status);
+            }
+            if (nisn != null && !nisn.trim().isEmpty()) {
+                stmt.setString(index++, "%" + nisn + "%");
+            }
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Invoice invoice = new Invoice();
+                invoice.setId(rs.getInt("id"));
+                invoice.setStudentId(rs.getInt("student_id"));
+                invoice.setJumlah(rs.getFloat("jumlah"));
+                invoice.setTanggalJatuhTempo(rs.getDate("tanggal_jatuh_tempo").toLocalDate());
+                invoice.setStatus(rs.getString("status"));
+                invoice.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+
+                // info siswa
+                invoice.setStudentName(rs.getString("nama_lengkap"));
+                invoice.setStudentNisn(rs.getString("nisn"));
+
+                result.add(invoice);
             }
 
             rs.close();
@@ -112,18 +166,31 @@ public class InvoiceDAO {
         return studentId;
     }
 
-    public int findById(int id) {
-        int invoice_id = -1;
-        String sql = "SELECT student_id FROM invoice WHERE id = ?";
+    public Invoice findInvoiceById(int id) {
+        Invoice invoice = null;
 
         try {
+            String sql = "SELECT i.*, s.nama_lengkap, s.nisn FROM invoice i "
+                    + "JOIN student s ON i.student_id = s.id "
+                    + "WHERE i.id = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, id);
+
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                invoice_id = rs.getInt("student_id");
+                invoice = new Invoice();
+                invoice.setId(rs.getInt("id"));
+                invoice.setStudentId(rs.getInt("student_id"));
+                invoice.setJumlah(rs.getFloat("jumlah"));
+                invoice.setTanggalJatuhTempo(rs.getDate("tanggal_jatuh_tempo").toLocalDate());
+                invoice.setStatus(rs.getString("status"));
+                invoice.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+
+                invoice.setStudentName(rs.getString("nama_lengkap"));
+                invoice.setStudentNisn(rs.getString("nisn"));
             }
+
             rs.close();
             stmt.close();
 
@@ -131,7 +198,7 @@ public class InvoiceDAO {
             e.printStackTrace();
         }
 
-        return invoice_id;
+        return invoice;
     }
 
     public Invoice findByStudentId(int student_id) {
@@ -226,7 +293,7 @@ public class InvoiceDAO {
         try {
             PreparedStatement stmt = conn.prepareStatement(sql.toString());
 
-            for (int i = 1; i < params.size(); i++) {
+            for (int i = 0; i < params.size(); i++) {
                 stmt.setObject(i + 1, params.get(i));
             }
 
