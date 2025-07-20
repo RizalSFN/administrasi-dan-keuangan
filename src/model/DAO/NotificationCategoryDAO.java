@@ -72,7 +72,7 @@ public class NotificationCategoryDAO {
 
             int index = 1;
             if (!status.equalsIgnoreCase("Semua")) {
-                stmt.setString(index++, status.toLowerCase()); // asumsi status disimpan lowercase
+                stmt.setString(index++, status.toLowerCase());
             }
             if (nama != null && !nama.trim().isEmpty()) {
                 stmt.setString(index++, "%" + nama + "%");
