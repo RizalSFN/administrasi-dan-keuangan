@@ -43,7 +43,7 @@ public class EmailSender {
 
         String testBody = "Halo, ini adalah tagihan pembayaran sekolah untuk siswa dengan identitas sebagai berikut : \n\n"
                 + "Nama : Rizal Sofiana \n"
-                + "Kelas : 12 IPA 3 \n"
+                + "Kelas : 12 IPA 3 \n" 
                 + "NISN : 123123123 \n"
                 + "Jumlah Tagihan : Rp 500.000,00 \n"
                 + "Tanggal jatuh tempo : 20 Juni 2025 \n"
