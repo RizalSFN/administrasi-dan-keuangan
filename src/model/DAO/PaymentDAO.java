@@ -48,6 +48,52 @@ public class PaymentDAO {
         return generatedId;
     }
 
+    public List<Payment> getPayments(String statusVerifikasi, String invoiceIdSearch) {
+        List<Payment> result = new ArrayList<>();
+        try {
+            String sql = "SELECT * FROM payment WHERE 1=1";
+
+            if (statusVerifikasi != null && !statusVerifikasi.equalsIgnoreCase("Semua")) {
+                sql += " AND status_verifikasi = ?";
+            }
+            if (invoiceIdSearch != null && !invoiceIdSearch.trim().isEmpty()) {
+                sql += " AND invoice_id LIKE ?";
+            }
+
+            PreparedStatement stmt = conn.prepareStatement(sql);
+
+            int idx = 1;
+            if (statusVerifikasi != null && !statusVerifikasi.equalsIgnoreCase("Semua")) {
+                stmt.setString(idx++, statusVerifikasi);
+            }
+            if (invoiceIdSearch != null && !invoiceIdSearch.trim().isEmpty()) {
+                stmt.setString(idx++, "%" + invoiceIdSearch + "%");
+            }
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Payment payment = new Payment();
+                payment.setId(rs.getInt("id"));
+                payment.setInvoiceId(rs.getInt("invoice_id"));
+                payment.setBuktiPembayaran(rs.getString("bukti_pembayaran"));
+                payment.setTanggalBayar(rs.getDate("tanggal_bayar").toLocalDate());
+                payment.setJumlahBayar(rs.getFloat("jumlah_bayar"));
+                payment.setJenisPembayaran(rs.getString("jenis_pembayaran"));
+                payment.setStatusVerifikasi(rs.getString("status_verifikasi"));
+                // Tambahkan kolom lain kalau ada
+                result.add(payment);
+            }
+
+            rs.close();
+            stmt.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
     public Payment findByInvoiceId(int invoice_id) {
         Payment payment = null;
 
@@ -185,7 +231,7 @@ public class PaymentDAO {
         try {
             PreparedStatement stmt = conn.prepareStatement(sql.toString());
 
-            for (int i = 1; i < params.size(); i++) {
+            for (int i = 0; i < params.size(); i++) {
                 stmt.setObject(i + 1, params.get(i));
             }
 

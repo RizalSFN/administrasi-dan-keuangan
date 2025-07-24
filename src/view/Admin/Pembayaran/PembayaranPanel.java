@@ -131,7 +131,8 @@ public class PembayaranPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btnInvoiceActionPerformed
 
     private void btnPaymentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPaymentActionPerformed
-        // TODO add your handling code here:
+        CardLayout cl = (CardLayout) adminDashboard.getPanelContent().getLayout();
+        cl.show(adminDashboard.getPanelContent(), "PembayaranPayment");
     }//GEN-LAST:event_btnPaymentActionPerformed
 
 

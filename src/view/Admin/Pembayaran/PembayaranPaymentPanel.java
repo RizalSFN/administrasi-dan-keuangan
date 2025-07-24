@@ -5,6 +5,19 @@
  */
 package view.Admin.Pembayaran;
 
+import controller.InvoiceController;
+import controller.PaymentController;
+import java.awt.CardLayout;
+import java.awt.Image;
+import java.io.File;
+import java.util.List;
+import javax.swing.ImageIcon;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import model.Invoice;
+import model.Payment;
 import view.Admin.AdminDashboard;
 
 /**
@@ -14,13 +27,71 @@ import view.Admin.AdminDashboard;
 public class PembayaranPaymentPanel extends javax.swing.JPanel {
 
     private AdminDashboard adminDashboard;
-    
+
     /**
      * Creates new form PembayaranPaymentPanel
      */
     public PembayaranPaymentPanel(AdminDashboard adminDashboard) {
         initComponents();
         this.adminDashboard = adminDashboard;
+        tampilDataPayment();
+    }
+
+    public void tampilDataPayment() {
+        PaymentController controller = new PaymentController();
+        List<Payment> paymentList = controller.getPayments(null, null);
+
+        String[] kolom = {"ID", "No", "Invoice_id", "Bukti_pembayaran", "Tanggal_bayar", "Jumlah_bayar", "Jenis_pembayaran", "Status"};
+        DefaultTableModel model = new DefaultTableModel(null, kolom);
+
+        int nomor = 1;
+        for (Payment pay : paymentList) {
+            Object[] row = {
+                pay.getId(),
+                nomor++,
+                pay.getInvoiceId(),
+                pay.getBuktiPembayaran(),
+                pay.getTanggalBayar(),
+                pay.getJumlahBayar(),
+                pay.getJenisPembayaran(),
+                pay.getStatusVerifikasi()
+            };
+            model.addRow(row);
+        }
+
+        tabelPayment.getColumnModel().getColumn(0).setMinWidth(0);
+        tabelPayment.getColumnModel().getColumn(0).setMaxWidth(0);
+        tabelPayment.setModel(model);
+    }
+
+    public void filterDataPayment() {
+        String selectedStatus = cmbStatus.getSelectedItem().toString();
+        String invoideIdSearch = txtCari.getText().trim();
+
+        PaymentController controller = new PaymentController();
+        List<Payment> paymentList = controller.getPayments(selectedStatus, invoideIdSearch);
+
+        String[] kolom = {"ID", "No", "Invoice_id", "Bukti_pembayaran", "Tanggal_bayar", "Jumlah_bayar", "Jenis_pembayaran", "Status"};
+        DefaultTableModel model = new DefaultTableModel(null, kolom);
+
+        int nomor = 1;
+        for (Payment pay : paymentList) {
+            Object[] row = {
+                pay.getId(),
+                nomor++,
+                pay.getInvoiceId(),
+                pay.getBuktiPembayaran(),
+                pay.getTanggalBayar(),
+                pay.getJumlahBayar(),
+                pay.getJenisPembayaran(),
+                pay.getStatusVerifikasi()
+            };
+            model.addRow(row);
+        }
+
+        tabelPayment.getColumnModel().getColumn(0).setMinWidth(0);
+        tabelPayment.getColumnModel().getColumn(0).setMaxWidth(0);
+        tabelPayment.setModel(model);
     }
 
     /**
@@ -34,14 +105,18 @@ public class PembayaranPaymentPanel extends javax.swing.JPanel {
 
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        tabelPayment = new javax.swing.JTable();
+        btnKembali = new javax.swing.JButton();
+        btnLihatBuktiTransaksi = new javax.swing.JButton();
+        txtCari = new javax.swing.JTextField();
+        btnCari = new javax.swing.JButton();
+        cmbStatus = new javax.swing.JComboBox<>();
+        btnVerifikasi = new javax.swing.JButton();
 
         jLabel1.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         jLabel1.setText("PAYMENT");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tabelPayment.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -52,11 +127,42 @@ public class PembayaranPaymentPanel extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tabelPayment);
 
-        jButton1.setText("jButton1");
+        btnKembali.setText("Kembali");
+        btnKembali.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnKembaliActionPerformed(evt);
+            }
+        });
 
-        jButton2.setText("jButton2");
+        btnLihatBuktiTransaksi.setText("Lihat bukti transaksi");
+        btnLihatBuktiTransaksi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLihatBuktiTransaksiActionPerformed(evt);
+            }
+        });
+
+        btnCari.setText("Cari");
+        btnCari.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCariActionPerformed(evt);
+            }
+        });
+
+        cmbStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Semua", "menunggu", "diterima", "gagal" }));
+        cmbStatus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbStatusActionPerformed(evt);
+            }
+        });
+
+        btnVerifikasi.setText("Verifikasi");
+        btnVerifikasi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVerifikasiActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -68,11 +174,19 @@ public class PembayaranPaymentPanel extends javax.swing.JPanel {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(38, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton1)
+                        .addComponent(btnKembali)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnVerifikasi)
+                        .addGap(7, 7, 7)
+                        .addComponent(btnLihatBuktiTransaksi)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(cmbStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton2))
+                        .addComponent(txtCari, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnCari))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 746, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(36, 36, 36))
         );
@@ -83,20 +197,111 @@ public class PembayaranPaymentPanel extends javax.swing.JPanel {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
+                    .addComponent(btnKembali)
+                    .addComponent(btnLihatBuktiTransaksi)
+                    .addComponent(txtCari, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnCari)
+                    .addComponent(cmbStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnVerifikasi))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 359, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(28, 28, 28))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnLihatBuktiTransaksiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLihatBuktiTransaksiActionPerformed
+        int selectedRow = tabelPayment.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Pilih data payment terlebih dahulu!");
+            return;
+        }
+
+        // Misal kolom ke-2 adalah bukti_pembayaran
+        int buktiColumnIndex = 2;
+        String buktiPath = tabelPayment.getValueAt(selectedRow, buktiColumnIndex).toString();
+
+        // Cek file ada atau tidak
+        File buktiFile = new File(buktiPath);
+        if (!buktiFile.exists()) {
+            JOptionPane.showMessageDialog(this, "File bukti tidak ditemukan!");
+            return;
+        }
+
+        // Buat dialog tampil gambar
+        JDialog dialog = new JDialog();
+        dialog.setTitle("Bukti Pembayaran");
+        dialog.setSize(600, 600);
+        dialog.setLocationRelativeTo(this);
+
+        JLabel imageLabel = new JLabel();
+        imageLabel.setHorizontalAlignment(JLabel.CENTER);
+
+        // Load gambar
+        ImageIcon icon = new ImageIcon(buktiFile.getAbsolutePath());
+        // Resize agar pas ke dialog
+        Image img = icon.getImage().getScaledInstance(550, 500, Image.SCALE_SMOOTH);
+        imageLabel.setIcon(new ImageIcon(img));
+
+        dialog.add(imageLabel);
+        dialog.setVisible(true);
+    }//GEN-LAST:event_btnLihatBuktiTransaksiActionPerformed
+
+    private void btnKembaliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKembaliActionPerformed
+        CardLayout cl = (CardLayout) adminDashboard.getPanelContent().getLayout();
+        cl.show(adminDashboard.getPanelContent(), "Pembayaran");
+    }//GEN-LAST:event_btnKembaliActionPerformed
+
+    private void cmbStatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbStatusActionPerformed
+        filterDataPayment();
+    }//GEN-LAST:event_cmbStatusActionPerformed
+
+    private void btnCariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCariActionPerformed
+        filterDataPayment();
+    }//GEN-LAST:event_btnCariActionPerformed
+
+    private void btnVerifikasiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerifikasiActionPerformed
+        int selectedRow = tabelPayment.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Pilih data payment dulu!");
+            return;
+        }
+
+        int paymentId = (int) tabelPayment.getValueAt(selectedRow, 0); // Asumsi ID di kolom 0
+
+        String[] statusOptions = {"menunggu", "diterima", "gagal"};
+        String newStatus = (String) JOptionPane.showInputDialog(
+                this,
+                "Pilih status verifikasi:",
+                "Verifikasi Payment",
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                statusOptions,
+                statusOptions[0]
+        );
+
+        if (newStatus != null && !newStatus.isEmpty()) {
+            PaymentController controller = new PaymentController();
+            boolean success = controller.updatePaymentStatus(paymentId, newStatus);
+
+            if (success) {
+                JOptionPane.showMessageDialog(this, "Status berhasil diupdate!");
+                tampilDataPayment();
+            } else {
+                JOptionPane.showMessageDialog(this, "Gagal update status!");
+            }
+        }
+    }//GEN-LAST:event_btnVerifikasiActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton btnCari;
+    private javax.swing.JButton btnKembali;
+    private javax.swing.JButton btnLihatBuktiTransaksi;
+    private javax.swing.JButton btnVerifikasi;
+    private javax.swing.JComboBox<String> cmbStatus;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable tabelPayment;
+    private javax.swing.JTextField txtCari;
     // End of variables declaration//GEN-END:variables
 }

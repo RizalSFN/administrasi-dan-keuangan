@@ -10,6 +10,7 @@ import utils.EmailSender;
 
 import java.sql.Connection;
 import java.time.LocalDate;
+import java.util.List;
 
 public class PaymentController {
 
@@ -28,6 +29,10 @@ public class PaymentController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public List<Payment> getPayments(String statusVerifikasi, String invoiceId) {
+        return paymentDAO.getPayments(statusVerifikasi, invoiceId);
     }
 
     public boolean createPayment(Payment payment) {
@@ -52,6 +57,14 @@ public class PaymentController {
 
     public Payment getPaymentByStatusVerifikasi(String status) {
         return paymentDAO.findByStatusVerifikasi(status);
+    }
+
+    public boolean updatePaymentStatus(int paymentId, String newStatus) {
+        Payment payment = new Payment();
+        payment.setId(paymentId);
+        payment.setStatusVerifikasi(newStatus);
+
+        return paymentDAO.updatePayment(payment);
     }
 
     public void sendPaymentReminder(String studentEmail, String namaSiswa, String invoiceInfo) {

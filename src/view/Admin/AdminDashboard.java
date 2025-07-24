@@ -19,6 +19,7 @@ import view.Admin.Notification.NotificationDataPanel;
 import view.Admin.Pembayaran.FormInvoicePanel;
 import view.Admin.Pembayaran.PembayaranInvoicePanel;
 import view.Admin.Pembayaran.PembayaranPanel;
+import view.Admin.Pembayaran.PembayaranPaymentPanel;
 import view.Login;
 
 /**
@@ -54,6 +55,7 @@ public class AdminDashboard extends javax.swing.JFrame {
         PembayaranPanel pembayaranPanel = new PembayaranPanel(this);
         pembayaranInvoicePanel = new PembayaranInvoicePanel(this);
         FormInvoicePanel formInvoicePanel = new FormInvoicePanel(this);
+        PembayaranPaymentPanel pembayaranPaymentPanel = new PembayaranPaymentPanel(this);
 
         pembayaranInvoicePanel = new PembayaranInvoicePanel(this);
         panelContent.add(pembayaranInvoicePanel, "PembayaranInvoice");
@@ -65,6 +67,7 @@ public class AdminDashboard extends javax.swing.JFrame {
         panelContent.add(pembayaranPanel, "Pembayaran");
         panelContent.add(pembayaranInvoicePanel, "PembayaranInvoice");
         panelContent.add(formInvoicePanel, "FormInvoice");
+        panelContent.add(pembayaranPaymentPanel, "PembayaranPayment");
 
         CardLayout cl = (CardLayout) panelContent.getLayout();
         cl.show(panelContent, "Dashboard");
