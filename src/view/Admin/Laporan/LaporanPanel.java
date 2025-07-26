@@ -5,17 +5,23 @@
  */
 package view.Admin.Laporan;
 
+import java.awt.CardLayout;
+import view.Admin.AdminDashboard;
+
 /**
  *
  * @author RIZAL
  */
 public class LaporanPanel extends javax.swing.JPanel {
 
+    private AdminDashboard adminDashboard;
+    
     /**
      * Creates new form LaporanPanel
      */
-    public LaporanPanel() {
+    public LaporanPanel(AdminDashboard adminDashboard) {
         initComponents();
+        this.adminDashboard = adminDashboard;
     }
 
     /**
@@ -27,15 +33,30 @@ public class LaporanPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        btnArusKas = new javax.swing.JButton();
+        btnLabaRugi = new javax.swing.JButton();
+        btnNeraca = new javax.swing.JButton();
 
-        jButton1.setText("Laporan Arus Kas");
+        btnArusKas.setText("Laporan Arus Kas");
+        btnArusKas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnArusKasActionPerformed(evt);
+            }
+        });
 
-        jButton2.setText("Laporan Laba Rugi");
+        btnLabaRugi.setText("Laporan Laba Rugi");
+        btnLabaRugi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLabaRugiActionPerformed(evt);
+            }
+        });
 
-        jButton3.setText("Laporan Neraca");
+        btnNeraca.setText("Laporan Neraca");
+        btnNeraca.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNeracaActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -44,28 +65,43 @@ public class LaporanPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGap(297, 297, 297)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnArusKas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnLabaRugi, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnNeraca, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(312, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(162, 162, 162)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnArusKas, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnLabaRugi, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnNeraca, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(200, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnArusKasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnArusKasActionPerformed
+        CardLayout cl = (CardLayout) adminDashboard.getPanelContent().getLayout();
+        cl.show(adminDashboard.getPanelContent(), "ArusKas");
+    }//GEN-LAST:event_btnArusKasActionPerformed
+
+    private void btnLabaRugiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLabaRugiActionPerformed
+        CardLayout cl = (CardLayout) adminDashboard.getPanelContent().getLayout();
+        cl.show(adminDashboard.getPanelContent(), "LabaRugi");
+    }//GEN-LAST:event_btnLabaRugiActionPerformed
+
+    private void btnNeracaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNeracaActionPerformed
+        CardLayout cl = (CardLayout) adminDashboard.getPanelContent().getLayout();
+        cl.show(adminDashboard.getPanelContent(), "Neraca");
+    }//GEN-LAST:event_btnNeracaActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
+    private javax.swing.JButton btnArusKas;
+    private javax.swing.JButton btnLabaRugi;
+    private javax.swing.JButton btnNeraca;
     // End of variables declaration//GEN-END:variables
 }

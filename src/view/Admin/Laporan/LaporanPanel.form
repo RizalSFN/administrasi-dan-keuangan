@@ -19,9 +19,9 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" pref="297" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                  <Component id="jButton1" max="32767" attributes="0"/>
-                  <Component id="jButton2" max="32767" attributes="0"/>
-                  <Component id="jButton3" min="-2" pref="211" max="-2" attributes="0"/>
+                  <Component id="btnArusKas" max="32767" attributes="0"/>
+                  <Component id="btnLabaRugi" max="32767" attributes="0"/>
+                  <Component id="btnNeraca" min="-2" pref="211" max="-2" attributes="0"/>
               </Group>
               <EmptySpace pref="312" max="32767" attributes="0"/>
           </Group>
@@ -31,31 +31,40 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" pref="162" max="-2" attributes="0"/>
-              <Component id="jButton1" min="-2" pref="43" max="-2" attributes="0"/>
+              <Component id="btnArusKas" min="-2" pref="43" max="-2" attributes="0"/>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Component id="jButton2" min="-2" pref="43" max="-2" attributes="0"/>
+              <Component id="btnLabaRugi" min="-2" pref="43" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Component id="jButton3" min="-2" pref="43" max="-2" attributes="0"/>
+              <Component id="btnNeraca" min="-2" pref="43" max="-2" attributes="0"/>
               <EmptySpace pref="200" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Component class="javax.swing.JButton" name="jButton1">
+    <Component class="javax.swing.JButton" name="btnArusKas">
       <Properties>
         <Property name="text" type="java.lang.String" value="Laporan Arus Kas"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnArusKasActionPerformed"/>
+      </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="jButton2">
+    <Component class="javax.swing.JButton" name="btnLabaRugi">
       <Properties>
         <Property name="text" type="java.lang.String" value="Laporan Laba Rugi"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnLabaRugiActionPerformed"/>
+      </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="jButton3">
+    <Component class="javax.swing.JButton" name="btnNeraca">
       <Properties>
         <Property name="text" type="java.lang.String" value="Laporan Neraca"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnNeracaActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

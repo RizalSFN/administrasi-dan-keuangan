@@ -14,6 +14,10 @@ import java.awt.event.MouseMotionAdapter;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import model.User;
+import view.Admin.Laporan.ArusKasPanel;
+import view.Admin.Laporan.LabaRugiPanel;
+import view.Admin.Laporan.LaporanPanel;
+import view.Admin.Laporan.NeracaPanel;
 import view.Admin.Notification.NotificationCategoryPanel;
 import view.Admin.Notification.NotificationDataPanel;
 import view.Admin.Pembayaran.FormInvoicePanel;
@@ -56,6 +60,10 @@ public class AdminDashboard extends javax.swing.JFrame {
         pembayaranInvoicePanel = new PembayaranInvoicePanel(this);
         FormInvoicePanel formInvoicePanel = new FormInvoicePanel(this);
         PembayaranPaymentPanel pembayaranPaymentPanel = new PembayaranPaymentPanel(this);
+        LaporanPanel laporanPanel = new LaporanPanel(this);
+        ArusKasPanel arusKasPanel = new ArusKasPanel(this);
+        LabaRugiPanel labaRugiPanel = new LabaRugiPanel(this);
+        NeracaPanel neracaPanel = new NeracaPanel(this);
 
         pembayaranInvoicePanel = new PembayaranInvoicePanel(this);
         panelContent.add(pembayaranInvoicePanel, "PembayaranInvoice");
@@ -68,6 +76,10 @@ public class AdminDashboard extends javax.swing.JFrame {
         panelContent.add(pembayaranInvoicePanel, "PembayaranInvoice");
         panelContent.add(formInvoicePanel, "FormInvoice");
         panelContent.add(pembayaranPaymentPanel, "PembayaranPayment");
+        panelContent.add(laporanPanel, "Laporan");
+        panelContent.add(arusKasPanel, "ArusKas");
+        panelContent.add(labaRugiPanel, "LabaRugi");
+        panelContent.add(neracaPanel, "Neraca");
 
         CardLayout cl = (CardLayout) panelContent.getLayout();
         cl.show(panelContent, "Dashboard");
