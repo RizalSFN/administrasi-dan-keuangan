@@ -1,12 +1,19 @@
 package model.DAO;
 
+import config.DatabaseConnection;
+import java.math.BigDecimal;
 import model.SchoolCashflow;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import view.Admin.Cashflow.CashflowPanel;
 
 public class SchoolCashflowDAO {
+
     private Connection conn;
 
     public SchoolCashflowDAO(Connection conn) {
@@ -42,65 +49,91 @@ public class SchoolCashflowDAO {
         }
     }
 
-    public SchoolCashflow findByTipe(String tipe) {
-        SchoolCashflow schoolCashflow = null;
+    public List<SchoolCashflow> getCashFlowBetween(Date tglAwal, Date tglAkhir) {
+        List<SchoolCashflow> list = new ArrayList<>();
+        String sql = "SELECT tanggal, keterangan, tipe, jumlah, saldo_akhir "
+                + "FROM school_cashflow WHERE tanggal BETWEEN ? AND ? "
+                + "ORDER BY tanggal ASC, id ASC";
 
-        try {
-            String sql = "SELECT * FROM school_cashflow WHERE tipe = ?";
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setString(1, tipe);
-            ResultSet rs = stmt.executeQuery();
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setDate(1, new java.sql.Date(tglAwal.getTime()));
+            ps.setDate(2, new java.sql.Date(tglAkhir.getTime()));
 
-            if (rs.next()) {
-                schoolCashflow = new SchoolCashflow();
-                schoolCashflow.setId(rs.getInt("id"));
-                schoolCashflow.setTipe(rs.getString("tipe"));
-                schoolCashflow.setIncomeId(rs.getInt("income_id"));
-                schoolCashflow.setExpenseId(rs.getInt("expense_id"));
-                schoolCashflow.setJumlah(rs.getFloat("jumlah"));
-                schoolCashflow.setTanggal(rs.getDate("tanggal").toLocalDate());
-                schoolCashflow.setSaldoAwal(rs.getFloat("saldo_awal"));
-                schoolCashflow.setSaldoAkhir(rs.getFloat("saldo_akhir"));
-                schoolCashflow.setKeterangan(rs.getString("keterangan"));
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                SchoolCashflow cf = new SchoolCashflow();
+                cf.setTanggal(rs.getDate("tanggal").toLocalDate());
+                cf.setKeterangan(rs.getString("keterangan"));
+                cf.setTipe(rs.getString("tipe"));
+                cf.setJumlah(rs.getFloat("jumlah"));
+                cf.setSaldoAkhir(rs.getFloat("saldo_akhir"));
+                list.add(cf);
             }
-            rs.close();
-            stmt.close();
-
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        return schoolCashflow;
+        return list;
     }
 
-    public SchoolCashflow findByTanggal(Date tanggal) {
-        SchoolCashflow schoolCashflow = null;
-
-        try {
-            String sql = "SELECT * FROM school_cashflow WHERE tanggal = ?";
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setDate(1, tanggal);
-            ResultSet rs = stmt.executeQuery();
-
-            if (rs.next()) {
-                schoolCashflow = new SchoolCashflow();
-                schoolCashflow.setId(rs.getInt("id"));
-                schoolCashflow.setTipe(rs.getString("tipe"));
-                schoolCashflow.setIncomeId(rs.getInt("income_id"));
-                schoolCashflow.setExpenseId(rs.getInt("expense_id"));
-                schoolCashflow.setJumlah(rs.getFloat("jumlah"));
-                schoolCashflow.setTanggal(rs.getDate("tanggal").toLocalDate());
-                schoolCashflow.setSaldoAwal(rs.getFloat("saldo_awal"));
-                schoolCashflow.setSaldoAkhir(rs.getFloat("saldo_akhir"));
-                schoolCashflow.setKeterangan(rs.getString("keterangan"));
+    public static BigDecimal getTotalPemasukan(Connection conn, String tglAwal, String tglAkhir) throws Exception {
+        String sql = "SELECT SUM(jumlah) FROM school_income WHERE tanggal_pemasukan BETWEEN ? AND ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, tglAwal);
+            ps.setString(2, tglAkhir);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next() && rs.getBigDecimal(1) != null) {
+                return rs.getBigDecimal(1);
             }
-            rs.close();
-            stmt.close();
-
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+        return BigDecimal.ZERO;
+    }
 
-        return schoolCashflow;
+    public static BigDecimal getTotalPengeluaran(Connection conn, String tglAwal, String tglAkhir) throws Exception {
+        String sql = "SELECT SUM(jumlah) FROM school_expense WHERE tanggal_pengeluaran BETWEEN ? AND ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, tglAwal);
+            ps.setString(2, tglAkhir);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next() && rs.getBigDecimal(1) != null) {
+                return rs.getBigDecimal(1);
+            }
+        }
+        return BigDecimal.ZERO;
+    }
+
+    public BigDecimal getSaldoKas(String tanggal) throws SQLException {
+        String sql = "SELECT saldo_akhir FROM school_cashflow WHERE tanggal <= ? ORDER BY tanggal DESC, id DESC LIMIT 1";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, tanggal);
+            ResultSet rs = ps.executeQuery();
+            return rs.next() && rs.getBigDecimal(1) != null ? rs.getBigDecimal(1) : BigDecimal.ZERO;
+        }
+    }
+
+    public BigDecimal getTotalPiutang(String tanggal) throws SQLException {
+        String sql = "SELECT SUM(jumlah) FROM invoice WHERE status = 'belum lunas' AND tanggal_jatuh_tempo <= ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, tanggal);
+            ResultSet rs = ps.executeQuery();
+            return rs.next() && rs.getBigDecimal(1) != null ? rs.getBigDecimal(1) : BigDecimal.ZERO;
+        }
+    }
+
+    public BigDecimal getTotalPemasukan(String tanggal) throws SQLException {
+        String sql = "SELECT SUM(jumlah) FROM school_income WHERE tanggal_pemasukan <= ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, tanggal);
+            ResultSet rs = ps.executeQuery();
+            return rs.next() && rs.getBigDecimal(1) != null ? rs.getBigDecimal(1) : BigDecimal.ZERO;
+        }
+    }
+
+    public BigDecimal getTotalPengeluaran(String tanggal) throws SQLException {
+        String sql = "SELECT SUM(jumlah) FROM school_expense WHERE tanggal_pengeluaran <= ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, tanggal);
+            ResultSet rs = ps.executeQuery();
+            return rs.next() && rs.getBigDecimal(1) != null ? rs.getBigDecimal(1) : BigDecimal.ZERO;
+        }
     }
 }

@@ -5,7 +5,19 @@
  */
 package view.Admin.Laporan;
 
+import controller.SchoolCashflowController;
 import java.awt.CardLayout;
+import java.awt.Color;
+import java.io.File;
+import java.math.BigDecimal;
+import java.sql.SQLException;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+import java.util.Map;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import utils.PdfGenerator;
 import view.Admin.AdminDashboard;
 
 /**
@@ -15,13 +27,78 @@ import view.Admin.AdminDashboard;
 public class NeracaPanel extends javax.swing.JPanel {
 
     private AdminDashboard adminDashboard;
-    
+
     /**
      * Creates new form NeracaPanel
      */
     public NeracaPanel(AdminDashboard adminDashboard) {
         initComponents();
         this.adminDashboard = adminDashboard;
+    }
+
+    private void tampilkanNeraca() {
+        if (dateChooserTanggal.getDate() == null) {
+            JOptionPane.showMessageDialog(this, "Silakan pilih tanggal.", "Peringatan", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        String tanggal = new SimpleDateFormat("yyyy-MM-dd").format(dateChooserTanggal.getDate());
+        SchoolCashflowController controller = new SchoolCashflowController();
+        try {
+            Map<String, BigDecimal> data = controller.hitungNeraca(tanggal);
+            NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("id", "ID"));
+
+            txtKas.setText(currencyFormat.format(data.get("asetKas")));
+            txtPiutang.setText(currencyFormat.format(data.get("asetPiutang")));
+            txtTotalAset.setText(currencyFormat.format(data.get("totalAset")));
+            txtKewajiban.setText(currencyFormat.format(data.get("kewajiban")));
+            txtModal.setText(currencyFormat.format(data.get("ekuitas")));
+            txtTotalKewajibanEkuitas.setText(currencyFormat.format(data.get("totalKE")));
+
+            Color warna = data.get("ekuitas").compareTo(BigDecimal.ZERO) < 0 ? Color.RED : new Color(0, 128, 0);
+            txtModal.setForeground(warna);
+            txtTotalKewajibanEkuitas.setForeground(warna);
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Gagal menghitung neraca: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void cetakLaporanNeraca() {
+        if (txtTotalAset.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Tidak ada data untuk dicetak.", "Peringatan", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Simpan Laporan Neraca");
+        String timestamp = java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
+        fileChooser.setSelectedFile(new File("Laporan_Neraca_" + timestamp + ".pdf"));
+        if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+            File fileToSave = fileChooser.getSelectedFile();
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy", new Locale("id", "ID"));
+                String tanggal = sdf.format(dateChooserTanggal.getDate());
+
+                String[][] dataAset = {
+                    {"Kas & Setara Kas:", txtKas.getText()},
+                    {"Piutang SPP:", txtPiutang.getText()},
+                    {"TOTAL ASET:", txtTotalAset.getText()}
+                };
+
+                String[][] dataKE = {
+                    {"Kewajiban:", txtKewajiban.getText()},
+                    {"Modal (Ekuitas):", txtModal.getText()},
+                    {"TOTAL KEWAJIBAN & EKUITAS:", txtTotalKewajibanEkuitas.getText()}
+                };
+
+                PdfGenerator.generateNeracaPdf(tanggal, dataAset, dataKE, fileToSave);
+                JOptionPane.showMessageDialog(this, "Laporan PDF berhasil disimpan!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
+
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Gagal menyimpan PDF: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                e.printStackTrace();
+            }
+        }
     }
 
     /**
@@ -35,8 +112,8 @@ public class NeracaPanel extends javax.swing.JPanel {
 
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jDateChooser1 = new com.toedter.calendar.JDateChooser();
-        jButton1 = new javax.swing.JButton();
+        dateChooserTanggal = new com.toedter.calendar.JDateChooser();
+        btnTampil = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         txtKas = new javax.swing.JTextField();
@@ -46,20 +123,25 @@ public class NeracaPanel extends javax.swing.JPanel {
         txtTotalAset = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
-        txtKewajiban = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
         txtModal = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
         txtTotalKewajibanEkuitas = new javax.swing.JTextField();
         btnCetak = new javax.swing.JButton();
         btnKembali = new javax.swing.JButton();
+        txtKewajiban = new javax.swing.JTextField();
 
         jLabel1.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         jLabel1.setText("LAPORAN NERACA");
 
         jLabel2.setText("Per tanggal :");
 
-        jButton1.setText("Tampilkan");
+        btnTampil.setText("Tampilkan");
+        btnTampil.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTampilActionPerformed(evt);
+            }
+        });
 
         jLabel3.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         jLabel3.setText("ASET");
@@ -80,6 +162,11 @@ public class NeracaPanel extends javax.swing.JPanel {
         jLabel10.setText("Total Kewajiban & Ekuitas :");
 
         btnCetak.setText("Cetak PDF");
+        btnCetak.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCetakActionPerformed(evt);
+            }
+        });
 
         btnKembali.setText("Kembali");
         btnKembali.addActionListener(new java.awt.event.ActionListener() {
@@ -99,42 +186,29 @@ public class NeracaPanel extends javax.swing.JPanel {
                 .addComponent(jLabel7)
                 .addGap(112, 112, 112))
             .addGroup(layout.createSequentialGroup()
+                .addGap(58, 58, 58)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(txtKas)
+                    .addComponent(txtPiutang)
+                    .addComponent(txtTotalAset, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE))
+                .addGap(105, 105, 105)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(252, 252, 252)
-                        .addComponent(jLabel2)
-                        .addGap(18, 18, 18)
-                        .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(58, 58, 58)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txtKas)
-                            .addComponent(txtPiutang)
-                            .addComponent(txtTotalAset, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE))
-                        .addGap(105, 105, 105)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel10)
-                                    .addComponent(jLabel9))
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtTotalKewajibanEkuitas)
-                                    .addComponent(txtModal)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel8)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 106, Short.MAX_VALUE)
-                                .addComponent(txtKewajiban, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                    .addComponent(jLabel10)
+                    .addComponent(jLabel9)
+                    .addComponent(jLabel8))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtTotalKewajibanEkuitas)
+                    .addComponent(txtModal)
+                    .addComponent(txtKewajiban))
                 .addGap(53, 53, 53))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(237, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jLabel1)
@@ -143,20 +217,27 @@ public class NeracaPanel extends javax.swing.JPanel {
                         .addComponent(btnKembali, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(btnCetak, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(274, 274, 274))))
+                        .addGap(274, 274, 274))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addGap(18, 18, 18)
+                        .addComponent(dateChooserTanggal, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnTampil, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(227, 227, 227))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(21, 21, 21)
                 .addComponent(jLabel1)
-                .addGap(35, 35, 35)
+                .addGap(33, 33, 33)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jDateChooser1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(dateChooserTanggal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jButton1))
-                .addGap(45, 45, 45)
+                    .addComponent(btnTampil))
+                .addGap(47, 47, 47)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(jLabel7))
@@ -191,12 +272,20 @@ public class NeracaPanel extends javax.swing.JPanel {
         cl.show(adminDashboard.getPanelContent(), "Laporan");
     }//GEN-LAST:event_btnKembaliActionPerformed
 
+    private void btnTampilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTampilActionPerformed
+        tampilkanNeraca();
+    }//GEN-LAST:event_btnTampilActionPerformed
+
+    private void btnCetakActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCetakActionPerformed
+        cetakLaporanNeraca();
+    }//GEN-LAST:event_btnCetakActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCetak;
     private javax.swing.JButton btnKembali;
-    private javax.swing.JButton jButton1;
-    private com.toedter.calendar.JDateChooser jDateChooser1;
+    private javax.swing.JButton btnTampil;
+    private com.toedter.calendar.JDateChooser dateChooserTanggal;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;

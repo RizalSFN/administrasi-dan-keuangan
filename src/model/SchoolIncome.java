@@ -5,6 +5,7 @@
  */
 package model;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.LocalDate;
 
@@ -15,7 +16,7 @@ import java.time.LocalDate;
 public class SchoolIncome {
     private int id;
     private int source_id;
-    private float jumlah;
+    private BigDecimal jumlah;
     private LocalDate tanggal_pemasukan;
     private String bukti_transaksi;
     private String keterangan;
@@ -40,11 +41,11 @@ public class SchoolIncome {
         this.source_id = source_id;
     }
 
-    public float getJumlah() {
+    public BigDecimal getJumlah() {
         return jumlah;
     }
 
-    public void setJumlah(float jumlah) {
+    public void setJumlah(BigDecimal jumlah) {
         this.jumlah = jumlah;
     }
 

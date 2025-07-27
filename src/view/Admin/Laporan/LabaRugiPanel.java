@@ -5,7 +5,18 @@
  */
 package view.Admin.Laporan;
 
+import controller.SchoolCashflowController;
 import java.awt.CardLayout;
+import java.awt.Color;
+import java.io.File;
+import java.math.BigDecimal;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.Locale;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import utils.PdfGenerator;
 import view.Admin.AdminDashboard;
 
 /**
@@ -15,13 +26,73 @@ import view.Admin.AdminDashboard;
 public class LabaRugiPanel extends javax.swing.JPanel {
 
     private AdminDashboard adminDashboard;
-    
+
     /**
      * Creates new form LabaRugiPanel
      */
     public LabaRugiPanel(AdminDashboard adminDashboard) {
         initComponents();
         this.adminDashboard = adminDashboard;
+    }
+
+    private void hitungLabaRugi() {
+        if (dateChooserDari.getDate() == null || dateChooserSampai.getDate() == null) {
+            JOptionPane.showMessageDialog(this, "Silakan pilih rentang tanggal.", "Peringatan", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        try {
+            BigDecimal[] hasil = SchoolCashflowController.hitungLabaRugi(new java.sql.Date(dateChooserDari.getDate().getTime()), new java.sql.Date(dateChooserSampai.getDate().getTime()));
+            BigDecimal pemasukan = hasil[0];
+            BigDecimal pengeluaran = hasil[1];
+            BigDecimal labaRugi = hasil[2];
+
+            NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("id", "ID"));
+            txtPemasukan.setText(currencyFormat.format(pemasukan));
+            txtPengeluaran.setText(currencyFormat.format(pengeluaran));
+            txtLabaRugi.setText(currencyFormat.format(labaRugi));
+
+            if (labaRugi.compareTo(BigDecimal.ZERO) < 0) {
+                txtLabaRugi.setForeground(Color.RED);
+            } else {
+                txtLabaRugi.setForeground(new Color(0, 128, 0));
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Gagal menghitung laba/rugi: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+    }
+
+    private void cetakLaporanLabaRugi() {
+        if (txtPemasukan.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Tidak ada data untuk dicetak. Silakan hitung laba/rugi terlebih dahulu.", "Peringatan", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Simpan Laporan Laba Rugi");
+        String timestamp = java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
+        fileChooser.setSelectedFile(new File("Laporan_Laba_Rugi_" + timestamp + ".pdf"));
+        if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+            File fileToSave = fileChooser.getSelectedFile();
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy", new Locale("id", "ID"));
+                String periode = "Periode: " + sdf.format(dateChooserDari.getDate()) + " - " + sdf.format(dateChooserSampai.getDate());
+
+                String[][] data = {
+                    {"Total Pemasukan:", txtPemasukan.getText()},
+                    {"Total Pengeluaran:", txtPengeluaran.getText()},
+                    {"Laba / Rugi Bersih:", txtLabaRugi.getText()}
+                };
+
+                PdfGenerator.generateLabaRugiPdf(periode, data, fileToSave);
+                JOptionPane.showMessageDialog(this, "Laporan PDF berhasil disimpan!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
+
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Gagal menyimpan PDF: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                e.printStackTrace();
+            }
+        }
     }
 
     /**
@@ -57,6 +128,11 @@ public class LabaRugiPanel extends javax.swing.JPanel {
         jLabel3.setText("Sampai :");
 
         btnHitung.setText("Hitung Laba/Rugi");
+        btnHitung.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnHitungActionPerformed(evt);
+            }
+        });
 
         jLabel4.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         jLabel4.setText("Ringkasan Laba Rugi");
@@ -68,6 +144,11 @@ public class LabaRugiPanel extends javax.swing.JPanel {
         jLabel7.setText("Total pengeluaran :");
 
         btnCetak.setText("Cetak PDF");
+        btnCetak.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCetakActionPerformed(evt);
+            }
+        });
 
         btnKembali.setText("Kembali");
         btnKembali.addActionListener(new java.awt.event.ActionListener() {
@@ -159,6 +240,14 @@ public class LabaRugiPanel extends javax.swing.JPanel {
         CardLayout cl = (CardLayout) adminDashboard.getPanelContent().getLayout();
         cl.show(adminDashboard.getPanelContent(), "Laporan");
     }//GEN-LAST:event_btnKembaliActionPerformed
+
+    private void btnHitungActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHitungActionPerformed
+        hitungLabaRugi();
+    }//GEN-LAST:event_btnHitungActionPerformed
+
+    private void btnCetakActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCetakActionPerformed
+        cetakLaporanLabaRugi();
+    }//GEN-LAST:event_btnCetakActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

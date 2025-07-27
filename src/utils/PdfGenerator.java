@@ -27,7 +27,7 @@ public class PdfGenerator {
     public static void generateArusKasPdf(JTable table, File file) throws IOException {
         try (PDDocument document = new PDDocument()) {
             String[] headers = {"Tanggal", "Keterangan", "Tipe", "Jumlah", "Saldo Akhir"};
-            float[] colWidths = {70, 210, 60, 90, 90};
+            float[] colWidths = {70, 190, 80, 90, 90};
 
             String[][] content = new String[table.getRowCount()][table.getColumnCount()];
             for (int i = 0; i < table.getRowCount(); i++) {

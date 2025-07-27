@@ -246,6 +246,9 @@ public class AdminDashboard extends javax.swing.JFrame {
         panelMenuLaporan.setBackground(new java.awt.Color(255, 255, 255));
         panelMenuLaporan.setForeground(new java.awt.Color(0, 0, 0));
         panelMenuLaporan.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                panelMenuLaporanMouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 panelMenuLaporanMouseEntered(evt);
             }
@@ -551,6 +554,18 @@ public class AdminDashboard extends javax.swing.JFrame {
         CardLayout cl = (CardLayout) panelContent.getLayout();
         cl.show(panelContent, "Pembayaran");
     }//GEN-LAST:event_panelMenuPembayaranMouseClicked
+
+    private void panelMenuLaporanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelMenuLaporanMouseClicked
+        activeMenu = "Laporan";
+        panelMenuCashflow.setBackground(new Color(255, 255, 255));
+        panelMenuLaporan.setBackground(new Color(204, 204, 204));
+        panelMenuNotifikasi.setBackground(new Color(255, 255, 255));
+        panelMenuDashboard.setBackground(new Color(255, 255, 255));
+        panelMenuPembayaran.setBackground(new Color(255, 255, 255));
+
+        CardLayout cl = (CardLayout) panelContent.getLayout();
+        cl.show(panelContent, "Laporan");
+    }//GEN-LAST:event_panelMenuLaporanMouseClicked
 
     /**
      * @param args the command line arguments

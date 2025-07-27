@@ -5,24 +5,29 @@
  */
 package view.Admin.Laporan;
 
+import controller.SchoolCashflowController;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.io.File;
+import java.sql.Connection;
 import java.text.NumberFormat;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import java.util.Vector;
 import utils.PdfGenerator;
 import view.Admin.AdminDashboard;
-import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
+import java.sql.Date;
+import java.text.DecimalFormat;
+import java.util.List;
 import java.util.Locale;
-import java.util.Vector;
 import javax.swing.JLabel;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
+import model.DAO.SchoolCashflowDAO;
+import model.SchoolCashflow;
 
 /**
  *
@@ -34,18 +39,54 @@ public class ArusKasPanel extends javax.swing.JPanel {
 
     /**
      * Creates new form ArusKasPanel
-     * 
+     *
      * TODO : menampilkan data di tabel
      */
     public ArusKasPanel(AdminDashboard adminDashboard) {
         initComponents();
+        DefaultTableModel model = new DefaultTableModel(
+                new Object[]{"Tanggal", "Keterangan", "Tipe", "Jumlah", "Saldo Akhir"}, 0
+        );
+        tabelArusKas.setModel(model);
+
         this.adminDashboard = adminDashboard;
-        setupTableRenderers();
     }
 
     private void setupTableRenderers() {
-        tabelArusKas.getColumnModel().getColumn(3).setCellRenderer(new BalanceCellRenderer());
-        tabelArusKas.getColumnModel().getColumn(4).setCellRenderer(new BalanceCellRenderer());
+        if (tabelArusKas.getColumnCount() >= 5) {
+            tabelArusKas.getColumnModel().getColumn(3).setCellRenderer(new BalanceCellRenderer());
+            tabelArusKas.getColumnModel().getColumn(4).setCellRenderer(new BalanceCellRenderer());
+        }
+    }
+
+    private void tampilkanDataCashFlow() {
+        DefaultTableModel model = (DefaultTableModel) tabelArusKas.getModel();
+        model.setRowCount(0);
+
+        if (dateChooserDari.getDate() == null || dateChooserSampai.getDate() == null) {
+            JOptionPane.showMessageDialog(this, "Pilih rentang tanggal.", "Peringatan", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        Date tglAwal = new java.sql.Date(dateChooserDari.getDate().getTime());
+        Date tglAkhir = new java.sql.Date(dateChooserSampai.getDate().getTime());
+
+        SchoolCashflowController scc = new SchoolCashflowController();
+        List<SchoolCashflow> list = scc.getCashflowBetween(tglAwal, tglAkhir);
+
+        DecimalFormat df = new DecimalFormat("#,##0");
+
+        for (SchoolCashflow cf : list) {
+            Vector<Object> row = new Vector<>();
+            row.add(cf.getTanggal());
+            row.add(cf.getKeterangan());
+            row.add(cf.getTipe());
+            row.add(df.format(cf.getJumlah()));
+            row.add(df.format(cf.getSaldoAkhir()));
+            model.addRow(row);
+        }
+
+        setupTableRenderers();
     }
 
     private void cetakLaporanArusKas() {
@@ -144,6 +185,11 @@ public class ArusKasPanel extends javax.swing.JPanel {
         jLabel3.setText("Sampai :");
 
         btnTampilkan.setText("Tampilkan");
+        btnTampilkan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTampilkanActionPerformed(evt);
+            }
+        });
 
         btnCetak.setText("Cetak PDF");
         btnCetak.addActionListener(new java.awt.event.ActionListener() {
@@ -218,6 +264,10 @@ public class ArusKasPanel extends javax.swing.JPanel {
     private void btnCetakActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCetakActionPerformed
         cetakLaporanArusKas();
     }//GEN-LAST:event_btnCetakActionPerformed
+
+    private void btnTampilkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTampilkanActionPerformed
+        tampilkanDataCashFlow();
+    }//GEN-LAST:event_btnTampilkanActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
