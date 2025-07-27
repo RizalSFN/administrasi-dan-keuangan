@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -140,6 +141,28 @@ public class InvoiceDAO {
         }
 
         return result;
+    }
+
+    public int getStudentIdByInvoiceId(int invoiceId) {
+        int studentId = -1;
+
+        String sql = "SELECT student_id FROM invoice WHERE id = ?";
+
+        try {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+
+            stmt.setInt(1, invoiceId);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                studentId = rs.getInt("student_id");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return studentId;
     }
 
     public int findStudentIdByNisn(String nisn) {

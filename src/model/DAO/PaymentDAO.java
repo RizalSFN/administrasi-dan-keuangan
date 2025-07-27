@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -92,6 +93,33 @@ public class PaymentDAO {
         }
 
         return result;
+    }
+
+    public Payment getPaymentById(int paymentId) {
+        Payment payment = null;
+        String sql = "SELECT * FROM payment WHERE id = ?";
+
+        try {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+
+            stmt.setInt(1, paymentId);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                payment = new Payment();
+                payment.setId(rs.getInt("id"));
+                payment.setInvoiceId(rs.getInt("invoice_id"));
+                payment.setJumlahBayar(rs.getFloat("jumlah_bayar"));
+                payment.setTanggalBayar(rs.getDate("tanggal_bayar").toLocalDate());
+                payment.setJenisPembayaran(rs.getString("jenis_pembayaran"));
+                payment.setStatusVerifikasi(rs.getString("status_verifikasi"));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return payment;
     }
 
     public Payment findByInvoiceId(int invoice_id) {

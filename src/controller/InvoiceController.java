@@ -56,6 +56,10 @@ public class InvoiceController {
         return invoiceDAO.updateInvoice(invoice);
     }
 
+    public int getStudentIdByInvoiceId(int invoiceId) {
+        return invoiceDAO.getStudentIdByInvoiceId(invoiceId);
+    }
+
     public Invoice getInvoiceById(int id) {
         return invoiceDAO.findInvoiceById(id);
     }

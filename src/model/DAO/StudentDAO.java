@@ -4,6 +4,7 @@ import model.Student;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +33,32 @@ public class StudentDAO {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public Student getStudentById(int studentId) {
+        Student student = null;
+        String sql = "SELECT s.*, u.email FROM student s JOIN user u ON s.user_id = u.id WHERE s.id = ?";
+
+        try {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+
+            stmt.setInt(1, studentId);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                student = new Student();
+                student.setId(rs.getInt("id"));
+                student.setNamaLengkap(rs.getString("nama_lengkap"));
+                student.setKelas(rs.getString("kelas"));
+                student.setNisn(rs.getString("nisn"));
+                student.setEmail(rs.getString("email"));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return student;
     }
 
     public Student findByUserId(int user_id) {

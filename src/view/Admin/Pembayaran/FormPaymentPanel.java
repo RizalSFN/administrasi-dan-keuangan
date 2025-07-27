@@ -5,7 +5,10 @@
  */
 package view.Admin.Pembayaran;
 
+import controller.InvoiceController;
 import controller.PaymentController;
+import controller.StudentController;
+import controller.TransactionHistoryController;
 import java.awt.CardLayout;
 import java.io.File;
 import java.io.IOException;
@@ -13,11 +16,15 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import model.Payment;
+import model.Student;
+import model.TransactionHistory;
+import utils.EmailSender;
 import view.Admin.AdminDashboard;
 
 /**
@@ -210,9 +217,45 @@ public class FormPaymentPanel extends javax.swing.JPanel {
             payment.setBuktiPembayaran(buktiPath);
 
             PaymentController controller = new PaymentController();
-            boolean success = controller.createPayment(payment);
+            int paymentId = controller.createPayment(payment);
 
-            if (success) {
+            InvoiceController invoiceController = new InvoiceController();
+            int studentId = invoiceController.getStudentIdByInvoiceId(selectedInvoiceId);
+
+            if (paymentId > 0) {
+                TransactionHistoryController historyController = new TransactionHistoryController();
+
+                TransactionHistory history = new TransactionHistory();
+                history.setStudentId(studentId);
+                history.setPaymentId(paymentId);
+                history.setKeterangan("Pembayaran SPP bulan Juli");
+                history.setWaktuCatat(LocalDateTime.now());
+
+                boolean historySuccess = historyController.addHistory(history);
+
+                if (statusVerifikasi.equalsIgnoreCase("diterima")) {
+                    StudentController studentController = new StudentController();
+                    Student student = studentController.getStudentById(studentId);
+
+                    if (student != null && student.getEmail() != null && !student.getEmail().isEmpty()) {
+                        String subject = "Konfirmasi Pembayaran SPP Anda Telah Diterima";
+
+                        String emailBody = "Halo " + student.getNamaLengkap() + ",\n\n"
+                                + "Pembayaran Anda untuk tagihan sekolah telah *DITERIMA*. Berikut detailnya:\n\n"
+                                + "Nama: " + student.getNamaLengkap() + "\n"
+                                + "Kelas: " + student.getKelas() + "\n"
+                                + "NISN: " + student.getNisn() + "\n"
+                                + "Jumlah Bayar: Rp " + String.format("%,.2f", payment.getJumlahBayar()) + "\n"
+                                + "Tanggal Bayar: " + payment.getTanggalBayar() + "\n\n"
+                                + "Terima kasih telah melakukan pembayaran tepat waktu.\n\n"
+                                + "Hormat kami,\n"
+                                + "Staff Administrasi dan Keuangan\n"
+                                + "SMA Tadika Mesra";
+
+                        EmailSender.sendEmail(student.getEmail(), subject, emailBody);
+                    }
+                }
+
                 JOptionPane.showMessageDialog(this, "Berhasil menyimpan pembayaran!");
                 CardLayout cl = (CardLayout) adminDashboard.getPanelContent().getLayout();
                 cl.show(adminDashboard.getPanelContent(), "PembayaranInvoice");

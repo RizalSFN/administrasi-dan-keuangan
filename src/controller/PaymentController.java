@@ -35,12 +35,24 @@ public class PaymentController {
         return paymentDAO.getPayments(statusVerifikasi, invoiceId);
     }
 
-    public boolean createPayment(Payment payment) {
+    public int createPayment(Payment payment) {
         int paymentId = paymentDAO.insertNewPayment(payment);
+
         if (paymentId > 0) {
-            return invoiceController.updateInvoice(payment.getInvoiceId(), "lunas");
+            boolean invoiceUpdated = invoiceController.updateInvoice(payment.getInvoiceId(), "lunas");
+            if (invoiceUpdated) {
+                return paymentId;
+            } else {
+                System.err.println("Gagal update status invoice.");
+                return -1;
+            }
         }
-        return false;
+
+        return -1;
+    }
+
+    public Payment getPaymentById(int id) {
+        return paymentDAO.getPaymentById(id);
     }
 
     public boolean updatePayment(Payment payment) {

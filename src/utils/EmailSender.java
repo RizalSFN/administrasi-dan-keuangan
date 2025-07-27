@@ -36,23 +36,23 @@ public class EmailSender {
         }
     }
 
-    public static void main(String[] args) {
-        String testEmail = "rizalsofiana1976@gmail.com";
-        String testSubject = "TEST: Pengujian Email Sender";
-        // String testBody = "Halo! Ini adalah email uji coba dari aplikasi Java kamu.";
-
-        String testBody = "Halo, ini adalah tagihan pembayaran sekolah untuk siswa dengan identitas sebagai berikut : \n\n"
-                + "Nama : Rizal Sofiana \n"
-                + "Kelas : 12 IPA 3 \n" 
-                + "NISN : 123123123 \n"
-                + "Jumlah Tagihan : Rp 500.000,00 \n"
-                + "Tanggal jatuh tempo : 20 Juni 2025 \n"
-                + "Pembayaran tunai : langsung datang ke sekolah (ke staff keuangan) \n"
-                + "Pembayaran non tunai : Transfer ke : 123321123 a/n SMK Tadika Mesra \n\n"
-                + "Hormat kami,\n"
-                + "Staff administrasi dan keuangan \n"
-                + "SMA Tadika Mesra";
-
-        EmailSender.sendEmail(testEmail, testSubject, testBody);
-    }
+//    public static void main(String[] args) {
+//        String testEmail = "rizalsofiana1976@gmail.com";
+//        String testSubject = "TEST: Pengujian Email Sender";
+//        // String testBody = "Halo! Ini adalah email uji coba dari aplikasi Java kamu.";
+//
+//        String testBody = "Halo, ini adalah tagihan pembayaran sekolah untuk siswa dengan identitas sebagai berikut : \n\n"
+//                + "Nama : Rizal Sofiana \n"
+//                + "Kelas : 12 IPA 3 \n" 
+//                + "NISN : 123123123 \n"
+//                + "Jumlah Tagihan : Rp 500.000,00 \n"
+//                + "Tanggal jatuh tempo : 20 Juni 2025 \n"
+//                + "Pembayaran tunai : langsung datang ke sekolah (ke staff keuangan) \n"
+//                + "Pembayaran non tunai : Transfer ke : 123321123 a/n SMK Tadika Mesra \n\n"
+//                + "Hormat kami,\n"
+//                + "Staff administrasi dan keuangan \n"
+//                + "SMA Tadika Mesra";
+//
+//        EmailSender.sendEmail(testEmail, testSubject, testBody);
+//    }
 }

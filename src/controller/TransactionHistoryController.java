@@ -4,8 +4,10 @@ import model.TransactionHistory;
 import model.DAO.TransactionHistoryDAO;
 import java.sql.Connection;
 import config.DatabaseConnection;
+import java.util.List;
 
 public class TransactionHistoryController {
+
     private TransactionHistoryDAO transactionHistoryDAO;
 
     public TransactionHistoryController() {
@@ -17,20 +19,19 @@ public class TransactionHistoryController {
         }
     }
 
-    public boolean createTransactionHistory(int studentId, int paymentId, String keterangan) {
-        TransactionHistory transactionHistory = new TransactionHistory();
-        transactionHistory.setStudentId(studentId);
-        transactionHistory.setPaymentId(paymentId);
-        transactionHistory.setKeterangan(keterangan);
+    public boolean addHistory(TransactionHistory history) {
+    return transactionHistoryDAO.insertHistory(history);
+}
 
-        return transactionHistoryDAO.insertNewTransactionHistory(transactionHistory);
+    public List<TransactionHistory> getAllHistories() {
+        return transactionHistoryDAO.getAllHistories();
     }
 
-    public TransactionHistory getTransactionHistoryByStudentId(int studentId) {
-        return transactionHistoryDAO.findByStudentId(studentId);
+    public List<TransactionHistory> getByStudentId(int studentId) {
+        return transactionHistoryDAO.getHistoriesByStudentId(studentId);
     }
 
-    public TransactionHistory getTransactionHistoryByPaymentId(int paymentId) {
-        return transactionHistoryDAO.findByPaymentId(paymentId);
+    public List<TransactionHistory> getByPaymentId(int paymentId) {
+        return transactionHistoryDAO.getHistoriesByPaymentId(paymentId);
     }
 }

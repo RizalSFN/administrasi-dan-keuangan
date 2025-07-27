@@ -16,7 +16,7 @@ public class TransactionHistory {
     private int student_id;
     private int payment_id;
     private String keterangan;
-    private LocalDateTime created_at;
+    private LocalDateTime waktu_catat;
     
     public TransactionHistory() {}
     
@@ -52,11 +52,11 @@ public class TransactionHistory {
         this.keterangan = keterangan;
     }
     
-    public LocalDateTime getCreatedAt() {
-        return created_at;
+    public LocalDateTime getWaktuCatat() {
+        return waktu_catat;
     }
     
-    public void setCreatedAt(LocalDateTime created_at) {
-        this.created_at = created_at;
+    public void setWaktuCatat(LocalDateTime waktu_catat) {
+        this.waktu_catat = waktu_catat;
     }
 }

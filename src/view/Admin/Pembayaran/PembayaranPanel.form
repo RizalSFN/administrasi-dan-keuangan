@@ -25,10 +25,13 @@
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                   <Component id="jPanel3" max="32767" attributes="0"/>
-                  <Component id="btnPayment" pref="240" max="32767" attributes="0"/>
+                  <Component id="btnPayment" max="32767" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Component id="jPanel4" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                  <Component id="jPanel4" max="32767" attributes="0"/>
+                  <Component id="btnHistory" max="32767" attributes="0"/>
+              </Group>
               <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -46,6 +49,7 @@
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="btnInvoice" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="btnPayment" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="btnHistory" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace pref="334" max="32767" attributes="0"/>
           </Group>
@@ -83,7 +87,7 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="240" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
@@ -127,6 +131,14 @@
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnPaymentActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="btnHistory">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Lihat History"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnHistoryActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>

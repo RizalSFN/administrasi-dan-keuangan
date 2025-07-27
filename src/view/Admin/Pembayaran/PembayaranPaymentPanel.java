@@ -7,6 +7,7 @@ package view.Admin.Pembayaran;
 
 import controller.InvoiceController;
 import controller.PaymentController;
+import controller.StudentController;
 import java.awt.CardLayout;
 import java.awt.Image;
 import java.io.File;
@@ -18,6 +19,8 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import model.Invoice;
 import model.Payment;
+import model.Student;
+import utils.EmailSender;
 import view.Admin.AdminDashboard;
 
 /**
@@ -196,13 +199,14 @@ public class PembayaranPaymentPanel extends javax.swing.JPanel {
                 .addGap(18, 18, 18)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnKembali)
-                    .addComponent(btnLihatBuktiTransaksi)
-                    .addComponent(txtCari, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnCari)
-                    .addComponent(cmbStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnVerifikasi))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtCari, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnKembali)
+                        .addComponent(btnLihatBuktiTransaksi)
+                        .addComponent(btnCari)
+                        .addComponent(cmbStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnVerifikasi)))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 359, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(28, 28, 28))
@@ -216,18 +220,17 @@ public class PembayaranPaymentPanel extends javax.swing.JPanel {
             return;
         }
 
-        // Misal kolom ke-2 adalah bukti_pembayaran
-        int buktiColumnIndex = 2;
+        int buktiColumnIndex = 3;
         String buktiPath = tabelPayment.getValueAt(selectedRow, buktiColumnIndex).toString();
 
-        // Cek file ada atau tidak
-        File buktiFile = new File(buktiPath);
+        // Tambahkan path absolut
+        File buktiFile = new File(System.getProperty("user.dir") + File.separator + buktiPath);
+        System.out.println("Cek path file: " + buktiFile.getAbsolutePath());
         if (!buktiFile.exists()) {
-            JOptionPane.showMessageDialog(this, "File bukti tidak ditemukan!");
+            JOptionPane.showMessageDialog(this, "File bukti tidak ditemukan!\n" + buktiFile.getAbsolutePath());
             return;
         }
 
-        // Buat dialog tampil gambar
         JDialog dialog = new JDialog();
         dialog.setTitle("Bukti Pembayaran");
         dialog.setSize(600, 600);
@@ -238,7 +241,6 @@ public class PembayaranPaymentPanel extends javax.swing.JPanel {
 
         // Load gambar
         ImageIcon icon = new ImageIcon(buktiFile.getAbsolutePath());
-        // Resize agar pas ke dialog
         Image img = icon.getImage().getScaledInstance(550, 500, Image.SCALE_SMOOTH);
         imageLabel.setIcon(new ImageIcon(img));
 
@@ -266,7 +268,14 @@ public class PembayaranPaymentPanel extends javax.swing.JPanel {
             return;
         }
 
-        int paymentId = (int) tabelPayment.getValueAt(selectedRow, 0); // Asumsi ID di kolom 0
+        int paymentId = (int) tabelPayment.getValueAt(selectedRow, 0); // ID di kolom 0
+        PaymentController controller = new PaymentController();
+        Payment oldPayment = controller.getPaymentById(paymentId);
+
+        if (oldPayment == null) {
+            JOptionPane.showMessageDialog(this, "Data payment tidak ditemukan!");
+            return;
+        }
 
         String[] statusOptions = {"menunggu", "diterima", "gagal"};
         String newStatus = (String) JOptionPane.showInputDialog(
@@ -276,16 +285,61 @@ public class PembayaranPaymentPanel extends javax.swing.JPanel {
                 JOptionPane.PLAIN_MESSAGE,
                 null,
                 statusOptions,
-                statusOptions[0]
+                oldPayment.getStatusVerifikasi() // default pilihan
         );
 
         if (newStatus != null && !newStatus.isEmpty()) {
-            PaymentController controller = new PaymentController();
             boolean success = controller.updatePaymentStatus(paymentId, newStatus);
 
             if (success) {
                 JOptionPane.showMessageDialog(this, "Status berhasil diupdate!");
                 tampilDataPayment();
+
+                // Cek apakah perlu kirim email
+                if (oldPayment.getStatusVerifikasi().equalsIgnoreCase("menunggu")) {
+                    // Hanya kirim email jika perubahan dari menunggu → diterima / gagal
+                    if (newStatus.equalsIgnoreCase("diterima") || newStatus.equalsIgnoreCase("gagal")) {
+                        // Ambil student_id dari invoice
+                        InvoiceController invoiceController = new InvoiceController();
+                        Invoice invoice = invoiceController.getInvoiceById(oldPayment.getInvoiceId());
+
+                        if (invoice != null) {
+                            int studentId = invoice.getStudentId();
+                            StudentController studentController = new StudentController();
+                            Student student = studentController.getStudentById(studentId);
+
+                            if (student != null && student.getEmail() != null && !student.getEmail().isEmpty()) {
+                                String subject, body;
+
+                                if (newStatus.equalsIgnoreCase("diterima")) {
+                                    subject = "Pembayaran Anda Telah Diterima";
+                                    body = "Halo " + student.getNamaLengkap() + ",\n\n"
+                                            + "Pembayaran Anda telah *DITERIMA*. Berikut detailnya:\n\n"
+                                            + "Nama: " + student.getNamaLengkap() + "\n"
+                                            + "Kelas: " + student.getKelas() + "\n"
+                                            + "NISN: " + student.getNisn() + "\n"
+                                            + "Jumlah: Rp " + String.format("%,.2f", oldPayment.getJumlahBayar()) + "\n"
+                                            + "Tanggal Bayar: " + oldPayment.getTanggalBayar() + "\n\n"
+                                            + "Terima kasih.\n\n"
+                                            + "Hormat kami,\nStaff Keuangan SMA Tadika Mesra";
+                                } else {
+                                    subject = "Pembayaran Anda Gagal Diproses";
+                                    body = "Halo " + student.getNamaLengkap() + ",\n\n"
+                                            + "Mohon maaf, pembayaran Anda *GAGAL DIPROSES*. Berikut detailnya:\n\n"
+                                            + "Nama: " + student.getNamaLengkap() + "\n"
+                                            + "Kelas: " + student.getKelas() + "\n"
+                                            + "NISN: " + student.getNisn() + "\n"
+                                            + "Jumlah: Rp " + String.format("%,.2f", oldPayment.getJumlahBayar()) + "\n"
+                                            + "Tanggal Bayar: " + oldPayment.getTanggalBayar() + "\n\n"
+                                            + "Silakan hubungi bagian keuangan sekolah.\n\n"
+                                            + "Hormat kami,\nStaff Keuangan SMA Tadika Mesra";
+                                }
+
+                                EmailSender.sendEmail(student.getEmail(), subject, body);
+                            }
+                        }
+                    }
+                }
             } else {
                 JOptionPane.showMessageDialog(this, "Gagal update status!");
             }

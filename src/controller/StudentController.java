@@ -6,6 +6,7 @@ import config.DatabaseConnection;
 import java.sql.Connection;
 
 public class StudentController {
+
     private StudentDAO studentDAO;
 
     public StudentController() {
@@ -25,6 +26,10 @@ public class StudentController {
         student.setKelas(kelas);
 
         return studentDAO.insertNewStudent(student);
+    }
+
+    public Student getStudentById(int studentId) {
+        return studentDAO.getStudentById(studentId);
     }
 
     public Student getStudentByUserId(int userId) {
