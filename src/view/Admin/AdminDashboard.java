@@ -14,6 +14,8 @@ import java.awt.event.MouseMotionAdapter;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import model.User;
+import view.Admin.Cashflow.PemasukanPanel;
+import view.Admin.Cashflow.PengeluaranPanel;
 import view.Admin.Laporan.ArusKasPanel;
 import view.Admin.Laporan.LabaRugiPanel;
 import view.Admin.Laporan.LaporanPanel;
@@ -66,6 +68,11 @@ public class AdminDashboard extends javax.swing.JFrame {
         LabaRugiPanel labaRugiPanel = new LabaRugiPanel(this);
         NeracaPanel neracaPanel = new NeracaPanel(this);
         RiwayatTransaksiPanel riwayatTransaksiPanel = new RiwayatTransaksiPanel(this);
+        StudentPanel studentPanel = new StudentPanel(this, 0);
+        AkunPanel akunPanel = new AkunPanel(this);
+        CashflowPanel cashflowPanel = new CashflowPanel(this);
+        PemasukanPanel pemasukanPanel = new PemasukanPanel(this);
+        PengeluaranPanel pengeluaranPanel = new PengeluaranPanel(this);
 
         pembayaranInvoicePanel = new PembayaranInvoicePanel(this);
         panelContent.add(pembayaranInvoicePanel, "PembayaranInvoice");
@@ -83,6 +90,10 @@ public class AdminDashboard extends javax.swing.JFrame {
         panelContent.add(labaRugiPanel, "LabaRugi");
         panelContent.add(neracaPanel, "Neraca");
         panelContent.add(riwayatTransaksiPanel, "RiwayatTransaksi");
+        panelContent.add(studentPanel, "Siswa");
+        panelContent.add(akunPanel, "Akun");
+        panelContent.add(pemasukanPanel, "KategoriPemasukan");
+        panelContent.add(pengeluaranPanel, "KategoriPengeluaran");
 
         CardLayout cl = (CardLayout) panelContent.getLayout();
         cl.show(panelContent, "Dashboard");
@@ -97,6 +108,19 @@ public class AdminDashboard extends javax.swing.JFrame {
 
     public PembayaranInvoicePanel getPembayaranInvoicePanel() {
         return pembayaranInvoicePanel;
+    }
+
+    public void showStudentPanel(int userId) {
+        StudentPanel studentPanel = new StudentPanel(this, userId);
+
+        // Hapus panel lama jika ada
+        panelContent.remove(studentPanel);
+
+        // Tambahkan ulang dengan userId yang baru
+        panelContent.add(studentPanel, "Siswa");
+
+        CardLayout cl = (CardLayout) panelContent.getLayout();
+        cl.show(panelContent, "Siswa");
     }
 
     /**
@@ -440,7 +464,7 @@ public class AdminDashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_panelMenuCashflowMouseExited
 
     private void panelMenuCashflowMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelMenuCashflowMouseClicked
-        CashflowPanel cashflow = new CashflowPanel(user);
+        CashflowPanel cashflow = new CashflowPanel(this);
         panelContent.add(cashflow, "Cashflow");
 
         activeMenu = "Cashflow";

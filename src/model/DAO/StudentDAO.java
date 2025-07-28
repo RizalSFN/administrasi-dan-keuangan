@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import model.User;
 
 public class StudentDAO {
 
@@ -33,6 +34,56 @@ public class StudentDAO {
             e.printStackTrace();
             return false;
         }
+    }
+    
+    public List<Student> getAllStudent() {
+        List<Student> studentList = new ArrayList<>();
+        String sql = "SELECT * FROM student";
+
+        try {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Student student = new Student();
+                student.setId(rs.getInt("id"));
+                student.setUserId(rs.getInt("user_id"));
+                student.setNamaLengkap(rs.getString("nama_lengkap"));
+                student.setNisn(rs.getString("nisn"));
+                student.setKelas(rs.getString("kelas"));
+
+                studentList.add(student);
+            }
+
+            rs.close();
+            stmt.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return studentList;
+    }
+
+    public int getJumlahSiswa(String status) {
+        int totalCount = 0;
+
+        try {
+            String sql = "SELECT COUNT(*) FROM student JOIN user ON student.user_id = user.id WHERE user.status = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, status);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                totalCount = rs.getInt(1);
+            }
+            rs.close();
+            stmt.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return totalCount;
     }
 
     public Student getStudentById(int studentId) {

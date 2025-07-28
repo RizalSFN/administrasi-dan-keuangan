@@ -4,6 +4,7 @@ import model.Student;
 import model.DAO.StudentDAO;
 import config.DatabaseConnection;
 import java.sql.Connection;
+import java.util.List;
 
 public class StudentController {
 
@@ -18,14 +19,16 @@ public class StudentController {
         }
     }
 
-    public boolean createStudent(int userId, String namaLengkap, String nisn, String kelas) {
-        Student student = new Student();
-        student.setUserId(userId);
-        student.setNamaLengkap(namaLengkap);
-        student.setNisn(nisn);
-        student.setKelas(kelas);
-
+    public boolean createStudent(Student student) {
         return studentDAO.insertNewStudent(student);
+    }
+    
+    public List<Student> getAllStudent() {
+        return studentDAO.getAllStudent();
+    }
+    
+    public int getJumlahSiswa(String status) {
+        return studentDAO.getJumlahSiswa(status);
     }
 
     public Student getStudentById(int studentId) {

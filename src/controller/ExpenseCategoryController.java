@@ -4,6 +4,7 @@ import model.ExpenseCategory;
 import model.DAO.ExpenseCategoryDAO;
 import java.sql.Connection;
 import config.DatabaseConnection;
+import java.util.List;
 
 public class ExpenseCategoryController {
     private ExpenseCategoryDAO expenseCategoryDAO;
@@ -17,13 +18,12 @@ public class ExpenseCategoryController {
         }
     }
 
-    public boolean createExpenseCategory(String nama, String deskripsi) {
-        ExpenseCategory expenseCategory = new ExpenseCategory();
-        expenseCategory.setNama(nama);
-        expenseCategory.setDeskripsi(deskripsi);
-        expenseCategory.setStatus("aktif");
-
+    public boolean createExpenseCategory(ExpenseCategory expenseCategory) {
         return expenseCategoryDAO.insertNewExpenseCategory(expenseCategory);
+    }
+    
+    public List<ExpenseCategory> getAllKategoriPengeluaran() {
+        return expenseCategoryDAO.getAllKategoriPengeluaran();
     }
 
     public ExpenseCategory getExpenseCategoryByStatus(String status) {

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ExpenseCategoryDAO {
+
     private Connection conn;
 
     public ExpenseCategoryDAO(Connection conn) {
@@ -30,6 +31,30 @@ public class ExpenseCategoryDAO {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public List<ExpenseCategory> getAllKategoriPengeluaran() {
+        List<ExpenseCategory> list = new ArrayList<>();
+        String sql = "SELECT * FROM expense_category";
+
+        try {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                ExpenseCategory ic = new ExpenseCategory();
+                ic.setId(rs.getInt("id"));
+                ic.setNama(rs.getString("nama"));
+                ic.setDeskripsi(rs.getString("deskripsi"));
+                ic.setStatus(rs.getString("status"));
+                list.add(ic);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
     }
 
     public ExpenseCategory findByStatus(String status) {
@@ -90,7 +115,7 @@ public class ExpenseCategoryDAO {
         try {
             PreparedStatement stmt = conn.prepareStatement(sql.toString());
 
-            for (int i = 1; i < params.size(); i++) {
+            for (int i = 0; i < params.size(); i++) {
                 stmt.setObject(i + 1, params.get(i));
             }
 

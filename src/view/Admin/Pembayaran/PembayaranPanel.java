@@ -39,6 +39,8 @@ public class PembayaranPanel extends javax.swing.JPanel {
         btnInvoice = new javax.swing.JButton();
         btnPayment = new javax.swing.JButton();
         btnHistory = new javax.swing.JButton();
+        btnAkun = new javax.swing.JButton();
+        btnSiswa = new javax.swing.JButton();
 
         jPanel1.setBackground(new java.awt.Color(51, 102, 255));
 
@@ -100,6 +102,20 @@ public class PembayaranPanel extends javax.swing.JPanel {
             }
         });
 
+        btnAkun.setText("Lihst Akun Siswa");
+        btnAkun.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAkunActionPerformed(evt);
+            }
+        });
+
+        btnSiswa.setText("Lihat Data Siswa");
+        btnSiswa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSiswaActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -107,12 +123,14 @@ public class PembayaranPanel extends javax.swing.JPanel {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(34, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(btnAkun, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnInvoice, javax.swing.GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnPayment, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnPayment, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnSiswa, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -132,7 +150,11 @@ public class PembayaranPanel extends javax.swing.JPanel {
                     .addComponent(btnInvoice)
                     .addComponent(btnPayment)
                     .addComponent(btnHistory))
-                .addContainerGap(334, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnAkun)
+                    .addComponent(btnSiswa))
+                .addContainerGap(284, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -151,11 +173,23 @@ public class PembayaranPanel extends javax.swing.JPanel {
         cl.show(adminDashboard.getPanelContent(), "RiwayatTransaksi");
     }//GEN-LAST:event_btnHistoryActionPerformed
 
+    private void btnAkunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAkunActionPerformed
+        CardLayout cl = (CardLayout) adminDashboard.getPanelContent().getLayout();
+        cl.show(adminDashboard.getPanelContent(), "Akun");
+    }//GEN-LAST:event_btnAkunActionPerformed
+
+    private void btnSiswaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSiswaActionPerformed
+        CardLayout cl = (CardLayout) adminDashboard.getPanelContent().getLayout();
+        cl.show(adminDashboard.getPanelContent(), "Siswa");
+    }//GEN-LAST:event_btnSiswaActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAkun;
     private javax.swing.JButton btnHistory;
     private javax.swing.JButton btnInvoice;
     private javax.swing.JButton btnPayment;
+    private javax.swing.JButton btnSiswa;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;

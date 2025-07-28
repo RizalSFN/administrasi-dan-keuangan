@@ -4,6 +4,7 @@ import model.IncomeSource;
 import model.DAO.IncomeSourceDAO;
 import config.DatabaseConnection;
 import java.sql.Connection;
+import java.util.List;
 
 public class IncomeSourceController {
     private IncomeSourceDAO incomeSourceDAO;
@@ -16,13 +17,12 @@ public class IncomeSourceController {
             e.printStackTrace();
         }
     }
+    
+    public List<IncomeSource> getAllKategoriPemasukan() {
+        return incomeSourceDAO.getAllKategoriPemasukan();
+    }
 
-    public boolean createIncomeSource(String nama, String deskripsi) {
-        IncomeSource incomeSource = new IncomeSource();
-        incomeSource.setNama(nama);
-        incomeSource.setDeskripsi(deskripsi);
-        incomeSource.setStatus("aktif");
-
+    public boolean createIncomeSource(IncomeSource incomeSource) {
         return incomeSourceDAO.insertNewIncomeSource(incomeSource);
     }
 

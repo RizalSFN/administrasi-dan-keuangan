@@ -19,6 +19,7 @@
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace pref="34" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                  <Component id="btnAkun" max="32767" attributes="0"/>
                   <Component id="btnInvoice" pref="240" max="32767" attributes="0"/>
                   <Component id="jPanel1" max="32767" attributes="0"/>
               </Group>
@@ -26,6 +27,7 @@
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                   <Component id="jPanel3" max="32767" attributes="0"/>
                   <Component id="btnPayment" max="32767" attributes="0"/>
+                  <Component id="btnSiswa" max="32767" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
@@ -51,7 +53,12 @@
                   <Component id="btnPayment" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="btnHistory" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="334" max="32767" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="btnAkun" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="btnSiswa" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace pref="284" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -139,6 +146,22 @@
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnHistoryActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="btnAkun">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Lihst Akun Siswa"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAkunActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="btnSiswa">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Lihat Data Siswa"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSiswaActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>

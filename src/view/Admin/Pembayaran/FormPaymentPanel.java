@@ -100,6 +100,11 @@ public class FormPaymentPanel extends javax.swing.JPanel {
         jLabel5.setText("Status pembayaran");
 
         btnKembali.setText("Kembali");
+        btnKembali.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnKembaliActionPerformed(evt);
+            }
+        });
 
         btnSimpan.setText("Simpan");
         btnSimpan.addActionListener(new java.awt.event.ActionListener() {
@@ -320,6 +325,11 @@ public class FormPaymentPanel extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
         }
     }//GEN-LAST:event_btnSimpanActionPerformed
+
+    private void btnKembaliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKembaliActionPerformed
+        CardLayout cl = (CardLayout) adminDashboard.getPanelContent().getLayout();
+        cl.show(adminDashboard.getPanelContent(), "Pembayaran");
+    }//GEN-LAST:event_btnKembaliActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -31,6 +31,30 @@ public class IncomeSourceDAO {
             return false;
         }
     }
+    
+    public List<IncomeSource> getAllKategoriPemasukan() {
+        List<IncomeSource> list = new ArrayList<>();
+        String sql = "SELECT * FROM income_source";
+
+        try {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                IncomeSource ic = new IncomeSource();
+                ic.setId(rs.getInt("id"));
+                ic.setNama(rs.getString("nama"));
+                ic.setDeskripsi(rs.getString("deskripsi"));
+                ic.setStatus(rs.getString("status"));
+                list.add(ic);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
 
     public IncomeSource findByStatus(String status) {
         IncomeSource incomeSource = null;
@@ -73,11 +97,6 @@ public class IncomeSourceDAO {
             params.add(incomeSource.getDeskripsi());
         }
 
-        if (incomeSource.getStatus() != null && !incomeSource.getStatus().isEmpty()) {
-            sql.append("status = ?, ");
-            params.add(incomeSource.getStatus());
-        }
-
         if (params.isEmpty()) {
             return false;
         }
@@ -90,7 +109,7 @@ public class IncomeSourceDAO {
         try {
             PreparedStatement stmt = conn.prepareStatement(sql.toString());
 
-            for (int i = 1; i < params.size(); i++) {
+            for (int i = 0; i < params.size(); i++) {
                 stmt.setObject(i + 1, params.get(i));
             }
 
