@@ -6,6 +6,7 @@
 package view.Admin.Pembayaran;
 
 import controller.InvoiceController;
+import controller.NotificationController;
 import controller.PaymentController;
 import controller.StudentController;
 import controller.TransactionHistoryController;
@@ -21,6 +22,7 @@ import java.time.ZoneId;
 import java.util.Date;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import model.Notification;
 import model.Payment;
 import model.Student;
 import model.TransactionHistory;
@@ -253,6 +255,53 @@ public class FormPaymentPanel extends javax.swing.JPanel {
                                 + "SMA Tadika Mesra";
 
                         EmailSender.sendEmail(student.getEmail(), subject, emailBody);
+
+                        Notification notification = new Notification();
+                        notification.setNotificationCategoryId(2);
+                        notification.setStudentId(studentId);
+                        notification.setInvoiceId(selectedInvoiceId);
+                        notification.setTitle(subject);
+                        notification.setBody(emailBody);
+                        notification.setDestination(student.getEmail());
+                        notification.setSendAt(LocalDateTime.now());
+                        notification.setStatus("terkirim");
+
+                        NotificationController nc = new NotificationController();
+                        nc.createNotification(notification);
+                    }
+                } else if (statusVerifikasi.equalsIgnoreCase("gagal")) {
+                    StudentController studentController = new StudentController();
+                    Student student = studentController.getStudentById(studentId);
+
+                    if (student != null && student.getEmail() != null && !student.getEmail().isEmpty()) {
+                        String subject = "Konfirmasi Pembayaran SPP Anda Gagal";
+
+                        String emailBody = "Halo " + student.getNamaLengkap() + ",\n\n"
+                                + "Pembayaran Anda untuk tagihan sekolah *GAGAL*. Berikut detailnya:\n\n"
+                                + "Nama: " + student.getNamaLengkap() + "\n"
+                                + "Kelas: " + student.getKelas() + "\n"
+                                + "NISN: " + student.getNisn() + "\n"
+                                + "Jumlah Bayar: Rp " + String.format("%,.2f", payment.getJumlahBayar()) + "\n"
+                                + "Tanggal Bayar: " + payment.getTanggalBayar() + "\n\n"
+                                + "Silahkan hubungi Staff Administrasi dan Keuangan.\n\n"
+                                + "Hormat kami,\n"
+                                + "Staff Administrasi dan Keuangan\n"
+                                + "SMA Tadika Mesra";
+
+                        EmailSender.sendEmail(student.getEmail(), subject, emailBody);
+
+                        Notification notification = new Notification();
+                        notification.setNotificationCategoryId(2);
+                        notification.setStudentId(studentId);
+                        notification.setInvoiceId(selectedInvoiceId);
+                        notification.setTitle(subject);
+                        notification.setBody(emailBody);
+                        notification.setDestination(student.getEmail());
+                        notification.setSendAt(LocalDateTime.now());
+                        notification.setStatus("terkirim");
+
+                        NotificationController nc = new NotificationController();
+                        nc.createNotification(notification);
                     }
                 }
 

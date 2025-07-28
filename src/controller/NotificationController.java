@@ -20,17 +20,7 @@ public class NotificationController {
         }
     }
 
-    public boolean createNotification(int notificationCategoryId, int studentId, int invoiceId, String title, String body, String destination, String status) {
-        Notification notification = new Notification();
-        notification.setNotificationCategoryId(notificationCategoryId);
-        notification.setStudentId(studentId);
-        notification.setInvoiceId(invoiceId);
-        notification.setTitle(title);
-        notification.setBody(body);
-        notification.setDestination(destination);
-        notification.setSendAt(LocalDateTime.now());
-        notification.setStatus(status);
-
+    public boolean createNotification(Notification notification) {
         return notificationDAO.insertNewNotification(notification);
     }
 

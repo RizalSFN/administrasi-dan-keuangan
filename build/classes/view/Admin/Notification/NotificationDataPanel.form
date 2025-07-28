@@ -22,9 +22,7 @@
                   <Component id="jScrollPane1" max="32767" attributes="0"/>
                   <Group type="102" attributes="0">
                       <Component id="btnKembali" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="btnTambah" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="152" max="32767" attributes="0"/>
+                      <EmptySpace pref="246" max="32767" attributes="0"/>
                       <Component id="cmbStatus" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="txtCari" min="-2" pref="209" max="-2" attributes="0"/>
@@ -48,7 +46,6 @@
               <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="btnTambah" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="txtCari" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="btnCari" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="cmbStatus" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -68,11 +65,6 @@
           <Font name="Dialog" size="24" style="1"/>
         </Property>
         <Property name="text" type="java.lang.String" value="NOTIFIKASI"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JButton" name="btnTambah">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Tambah"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="txtCari">

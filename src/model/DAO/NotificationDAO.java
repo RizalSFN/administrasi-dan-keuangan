@@ -17,19 +17,19 @@ public class NotificationDAO {
     }
 
     public boolean insertNewNotification(Notification notification) {
-        String sql = "INSERT INTO notification (notification_category_id, student_id, invoice_id, title, body, destination, send_at) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO notification (notification_category_id, student_id, invoice_id, title, body, destination, send_at, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         try {
             PreparedStatement stmt = conn.prepareStatement(sql);
 
-            stmt.setInt(1, notification.getId());
+            stmt.setInt(1, notification.getNotificationCategoryId());
             stmt.setInt(2, notification.getStudentId());
             stmt.setInt(3, notification.getInvoiceId());
             stmt.setString(4, notification.getTitle());
             stmt.setString(5, notification.getBody());
             stmt.setString(6, notification.getDestination());
             stmt.setTimestamp(7, Timestamp.valueOf(notification.getSendAt()));
-            // stmt.setString(8, notification.getStatus());
+            stmt.setString(8, notification.getStatus());
 
             int rowsInserted = stmt.executeUpdate();
             return rowsInserted > 0;
@@ -43,8 +43,8 @@ public class NotificationDAO {
     public List<Notification> getNotifications(String status, String studentName) {
         List<Notification> list = new ArrayList<>();
 
-        String sql = "SELECT n.*, s.nama_lengkap as student_name FROM notification n "
-                + "JOIN student s ON n.student_id = s.id WHERE 1=1";
+        String sql = "SELECT n.*, s.nama_lengkap as student_name, k.nama as nama_kategori FROM notification n "
+                + "JOIN student s ON n.student_id = s.id JOIN notification_category k ON n.notification_category_id = k.id WHERE 1=1";
 
         if (status != null && !status.equalsIgnoreCase("Semua")) {
             sql += " AND n.status = ?";
@@ -78,6 +78,7 @@ public class NotificationDAO {
                 n.setStatus(rs.getString("status"));
                 n.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
                 n.setStudentName(rs.getString("student_name")); 
+                n.setNamaKategori(rs.getString("nama_kategori"));
                 list.add(n);
             }
             rs.close();

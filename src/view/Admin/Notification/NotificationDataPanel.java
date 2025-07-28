@@ -33,22 +33,20 @@ public class NotificationDataPanel extends javax.swing.JPanel {
     private void tampilDataNotifikasi() {
         String status = cmbStatus.getSelectedItem().toString();
         String studentName = txtCari.getText().trim();
-        int nomor = 0;
+        int nomor = 1;
 
         NotificationController controller = new NotificationController();
         List<Notification> list = controller.getNotifications(status, studentName);
 
-        String[] kolom = {"No", "Kategori", "Siswa", "Invoice", "Tujuan", "Waktu Kirim", "Status"};
+        String[] kolom = {"No", "Kategori", "Siswa", "Invoice_id", "Tujuan", "Waktu Kirim", "Status"};
         DefaultTableModel model = new DefaultTableModel(null, kolom);
 
         for (Notification n : list) {
             Object[] row = {
                 nomor++,
-                n.getNotificationCategoryId(),
+                n.getNamaKategori(),
                 n.getStudentName(),
                 n.getInvoiceId(),
-                n.getTitle(),
-                n.getBody(),
                 n.getDestination(),
                 n.getSendAt(),
                 n.getStatus()
@@ -69,7 +67,6 @@ public class NotificationDataPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        btnTambah = new javax.swing.JButton();
         txtCari = new javax.swing.JTextField();
         btnCari = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -79,8 +76,6 @@ public class NotificationDataPanel extends javax.swing.JPanel {
 
         jLabel1.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         jLabel1.setText("NOTIFIKASI");
-
-        btnTambah.setText("Tambah");
 
         btnCari.setText("Cari");
         btnCari.addActionListener(new java.awt.event.ActionListener() {
@@ -131,9 +126,7 @@ public class NotificationDataPanel extends javax.swing.JPanel {
                     .addComponent(jScrollPane1)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(btnKembali)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnTambah)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 152, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 246, Short.MAX_VALUE)
                         .addComponent(cmbStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(txtCari, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -152,7 +145,6 @@ public class NotificationDataPanel extends javax.swing.JPanel {
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnTambah)
                     .addComponent(txtCari, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnCari)
                     .addComponent(cmbStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -184,7 +176,6 @@ public class NotificationDataPanel extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCari;
     private javax.swing.JButton btnKembali;
-    private javax.swing.JButton btnTambah;
     private javax.swing.JComboBox<String> cmbStatus;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;

@@ -7,6 +7,7 @@ public class Notification {
     private int notification_category_id;
     private int student_id;
     private String studentName;
+    private String namaKategori;
     private int invoice_id;
     private String title;
     private String body;
@@ -48,6 +49,14 @@ public class Notification {
     
     public void setStudentName(String studentName) {
         this.studentName = studentName;
+    }
+    
+    public String getNamaKategori() {
+        return namaKategori;
+    }
+    
+    public void setNamaKategori(String namaKategori) {
+        this.namaKategori = namaKategori;
     }
 
     public int getInvoiceId() {
