@@ -6,6 +6,7 @@
 package view.Admin.Cashflow;
 
 import controller.IncomeSourceController;
+import controller.SchoolCashflowController;
 import controller.SchoolIncomeController;
 import java.awt.Image;
 import java.io.File;
@@ -23,6 +24,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import model.SchoolCashflow;
 import model.SchoolIncome;
 import view.Admin.AdminDashboard;
 
@@ -272,9 +274,34 @@ public class SchoolIncomePanel extends javax.swing.JPanel {
             boolean success = controller.tambahIncome(income);
 
             if (success) {
-                JOptionPane.showMessageDialog(this, "Pemasukan berhasil disimpan.");
-                tampilDataKategori();
+                // Ambil ID terakhir (misalnya lewat controller)
+                int incomeId = controller.getLastInsertedIncomeId();
 
+                // Ambil saldo terakhir
+                SchoolCashflowController cashflowController = new SchoolCashflowController();
+                BigDecimal saldoSebelumnya = cashflowController.getLastSaldo();
+
+                // Buat objek cashflow
+                SchoolCashflow cashflow = new SchoolCashflow();
+                cashflow.setTipe("pemasukan");
+                cashflow.setIncomeId(incomeId);
+                cashflow.setExpenseId(0);
+                cashflow.setJumlah(jumlah);
+                cashflow.setTanggal(tanggalPemasukan);
+                cashflow.setSaldoAwal(saldoSebelumnya);
+                cashflow.setSaldoAkhir(saldoSebelumnya.add(jumlah));
+                cashflow.setKeterangan(keterangan);
+
+                boolean insertedCashflow = cashflowController.createSchoolCashflow(cashflow);
+
+                if (insertedCashflow) {
+                    JOptionPane.showMessageDialog(this, "Pemasukan & Cashflow berhasil disimpan.");
+                    tampilDataKategori();
+                    txtJumlah.setText("");
+                    txtKeterangan.setText("");
+                } else {
+                    JOptionPane.showMessageDialog(this, "Pemasukan tersimpan, namun gagal menyimpan cashflow.");
+                }
             } else {
                 JOptionPane.showMessageDialog(this, "Gagal menyimpan pemasukan.");
             }
@@ -288,7 +315,7 @@ public class SchoolIncomePanel extends javax.swing.JPanel {
     private void btnLihatBuktiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLihatBuktiActionPerformed
         int selectedRow = tabelPemasukan.getSelectedRow();
         if (selectedRow == -1) {
-            JOptionPane.showMessageDialog(this, "Pilih data payment terlebih dahulu!");
+            JOptionPane.showMessageDialog(this, "Pilih data terlebih dahulu!");
             return;
         }
 
@@ -304,7 +331,7 @@ public class SchoolIncomePanel extends javax.swing.JPanel {
         }
 
         JDialog dialog = new JDialog();
-        dialog.setTitle("Bukti Pembayaran");
+        dialog.setTitle("Bukti Transaksi");
         dialog.setSize(600, 600);
         dialog.setLocationRelativeTo(this);
 

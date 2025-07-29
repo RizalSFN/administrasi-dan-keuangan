@@ -27,7 +27,6 @@
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                   <Component id="jPanel2" max="32767" attributes="0"/>
                   <Component id="btnPengeluaran" max="32767" attributes="0"/>
-                  <Component id="btnArusKas" max="32767" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
@@ -54,10 +53,7 @@
                   <Component id="btnDataPemasukan" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="btnDataPengeluaran" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="btnArusKas" alignment="3" min="-2" max="-2" attributes="0"/>
-              </Group>
+              <Component id="btnDataPengeluaran" min="-2" max="-2" attributes="0"/>
               <EmptySpace pref="294" max="32767" attributes="0"/>
           </Group>
       </Group>
@@ -154,14 +150,6 @@
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnDataPengeluaranActionPerformed"/>
-      </Events>
-    </Component>
-    <Component class="javax.swing.JButton" name="btnArusKas">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Lihat Arus Kas"/>
-      </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnArusKasActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>

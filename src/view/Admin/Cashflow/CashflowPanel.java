@@ -41,7 +41,6 @@ public class CashflowPanel extends javax.swing.JPanel {
         btnPengeluaran = new javax.swing.JButton();
         btnDataPemasukan = new javax.swing.JButton();
         btnDataPengeluaran = new javax.swing.JButton();
-        btnArusKas = new javax.swing.JButton();
 
         jPanel1.setBackground(new java.awt.Color(0, 102, 255));
 
@@ -110,13 +109,6 @@ public class CashflowPanel extends javax.swing.JPanel {
             }
         });
 
-        btnArusKas.setText("Lihat Arus Kas");
-        btnArusKas.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnArusKasActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -130,8 +122,7 @@ public class CashflowPanel extends javax.swing.JPanel {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnPengeluaran, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnArusKas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnPengeluaran, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -152,9 +143,7 @@ public class CashflowPanel extends javax.swing.JPanel {
                     .addComponent(btnPengeluaran)
                     .addComponent(btnDataPemasukan))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnDataPengeluaran)
-                    .addComponent(btnArusKas))
+                .addComponent(btnDataPengeluaran)
                 .addContainerGap(294, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -179,13 +168,8 @@ public class CashflowPanel extends javax.swing.JPanel {
         cl.show(adminDashboard.getPanelContent(), "SchoolExpense");
     }//GEN-LAST:event_btnDataPengeluaranActionPerformed
 
-    private void btnArusKasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnArusKasActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnArusKasActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnArusKas;
     private javax.swing.JButton btnDataPemasukan;
     private javax.swing.JButton btnDataPengeluaran;
     private javax.swing.JButton btnPemasukan;

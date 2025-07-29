@@ -70,4 +70,21 @@ public class SchoolIncomeDAO {
 
         return list;
     }
+
+    public int getLastInsertedId() {
+        int id = -1;
+        String sql = "SELECT id FROM school_income ORDER BY id DESC LIMIT 1";
+
+        try {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                id = rs.getInt("id");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return id;
+    }
 }

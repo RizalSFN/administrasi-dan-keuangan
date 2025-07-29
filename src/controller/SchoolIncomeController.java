@@ -36,4 +36,8 @@ public class SchoolIncomeController {
     public List<SchoolIncome> tampilkanSemuaIncome() {
         return dao.getAllIncome();
     }
+
+    public int getLastInsertedIncomeId() {
+        return dao.getLastInsertedId();
+    }
 }

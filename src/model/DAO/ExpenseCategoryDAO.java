@@ -57,6 +57,28 @@ public class ExpenseCategoryDAO {
         return list;
     }
 
+    public int getIdByName(String name) {
+        int id = -1;
+        String sql = "SELECT id FROM expense_category WHERE nama = ?";
+
+        try {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, name);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                id = rs.getInt("id");
+            }
+
+            rs.close();
+            stmt.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return id;
+    }
+
     public ExpenseCategory findByStatus(String status) {
         ExpenseCategory expenseCategory = null;
 

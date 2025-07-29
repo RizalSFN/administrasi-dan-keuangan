@@ -1,6 +1,7 @@
 package controller;
 
 import config.DatabaseConnection;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.time.LocalDate;
 import java.util.List;
@@ -24,16 +25,16 @@ public class InvoiceController {
         }
     }
 
-    public boolean createNewInvoice(Invoice invoice) {
-        return invoiceDAO.insertNewInvoice(invoice);
+    public int createNewInvoiceReturnId(Invoice invoice) {
+        return invoiceDAO.insertInvoiceReturnId(invoice);
     }
 
-    public boolean createInvoiceByNisn(String nisn, float jumlah, LocalDate tanggalJatuhTempo) {
+    public int createInvoiceByNisn(String nisn, BigDecimal jumlah, LocalDate tanggalJatuhTempo) {
         int studentId = studentDAO.findStudentIdByNisn(nisn);
 
         if (studentId == -1) {
             System.out.println("Siswa dengan NISN tidak ditemukan.");
-            return false;
+            return 0;
         }
 
         Invoice invoice = new Invoice();
@@ -42,7 +43,7 @@ public class InvoiceController {
         invoice.setTanggalJatuhTempo(tanggalJatuhTempo);
         invoice.setStatus("belum lunas");
 
-        return invoiceDAO.insertNewInvoice(invoice);
+        return invoiceDAO.insertInvoiceReturnId(invoice);
     }
 
     public List<Map<String, Object>> getAllInvoices(String status, String nisn) {

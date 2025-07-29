@@ -328,7 +328,41 @@ public class FormPaymentPanel extends javax.swing.JPanel {
                     invoiceBaru.setStatus("belum lunas");
 
                     // Simpan ke database
-                    invoiceController.createNewInvoice(invoiceBaru);
+                    int invoiceId = invoiceController.createNewInvoiceReturnId(invoiceBaru);
+                    invoiceBaru.setId(invoiceId);
+
+                    Student student = new StudentController().getStudentById(studentId);
+
+                    if (student != null && student.getEmail() != null && !student.getEmail().isEmpty()) {
+                        String subjectTagihan = "Tunggakan Pembayaran Selanjutnya";
+
+                        String bodyTagihan = "Halo " + student.getNamaLengkap() + ",\n\n"
+                                + "Kami ingin mengingatkan bahwa Anda memiliki tagihan sekolah berikutnya.\n\n"
+                                + "Nama: " + student.getNamaLengkap() + "\n"
+                                + "Kelas: " + student.getKelas() + "\n"
+                                + "NISN: " + student.getNisn() + "\n"
+                                + "Jumlah Tagihan: Rp " + String.format("%,.2f", invoiceBaru.getJumlah()) + "\n"
+                                + "Jatuh Tempo: " + invoiceBaru.getTanggalJatuhTempo() + "\n\n"
+                                + "Mohon untuk melakukan pembayaran sebelum tanggal jatuh tempo.\n\n"
+                                + "Hormat kami,\n"
+                                + "Staff Administrasi dan Keuangan\n"
+                                + "SMA Tadika Mesra";
+
+                        EmailSender.sendEmail(student.getEmail(), subjectTagihan, bodyTagihan);
+
+                        Notification tagihanNotif = new Notification();
+                        tagihanNotif.setNotificationCategoryId(1);
+                        tagihanNotif.setStudentId(studentId);
+                        tagihanNotif.setInvoiceId(invoiceBaru.getId()); // pastikan ID invoiceBaru diperoleh jika tersedia
+                        tagihanNotif.setTitle(subjectTagihan);
+                        tagihanNotif.setBody(bodyTagihan);
+                        tagihanNotif.setDestination(student.getEmail());
+                        tagihanNotif.setSendAt(LocalDateTime.now());
+                        tagihanNotif.setStatus("terkirim");
+
+                        NotificationController nc = new NotificationController();
+                        nc.createNotification(tagihanNotif);
+                    }
                 }
 
                 JOptionPane.showMessageDialog(this, "Berhasil menyimpan pembayaran!");

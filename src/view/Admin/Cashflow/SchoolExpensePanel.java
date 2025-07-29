@@ -5,6 +5,28 @@
  */
 package view.Admin.Cashflow;
 
+import controller.ExpenseCategoryController;
+import controller.SchoolCashflowController;
+import controller.SchoolExpenseController;
+import java.awt.Image;
+import java.io.File;
+import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
+import java.util.List;
+import javax.swing.ImageIcon;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import model.ExpenseCategory;
+import model.SchoolCashflow;
+import model.SchoolExpense;
 import view.Admin.AdminDashboard;
 
 /**
@@ -14,13 +36,49 @@ import view.Admin.AdminDashboard;
 public class SchoolExpensePanel extends javax.swing.JPanel {
 
     private AdminDashboard adminDashboard;
-    
+    private File selectedFile = null;
+
     /**
      * Creates new form SchoolExpensePanel
      */
     public SchoolExpensePanel(AdminDashboard adminDashboard) {
         initComponents();
         this.adminDashboard = adminDashboard;
+        tampilDataKategori();
+        isiComboKategori();
+    }
+
+    private void isiComboKategori() {
+        ExpenseCategoryController kategoriController = new ExpenseCategoryController();
+        List<String> namaKategori = kategoriController.getAllKategoriNames();
+        cmbKategori.removeAllItems();
+        for (String nama : namaKategori) {
+            cmbKategori.addItem(nama);
+        }
+    }
+
+    private void tampilDataKategori() {
+        SchoolExpenseController controller = new SchoolExpenseController();
+        List<SchoolExpense> expenseList = controller.tampilkanSemuaExpense();
+
+        // Siapkan kolom
+        String[] kolom = {"ID", "Kategori", "Jumlah", "Tanggal", "Bukti", "Keterangan"};
+        DefaultTableModel model = new DefaultTableModel(null, kolom);
+
+        // Tambahkan baris
+        for (SchoolExpense se : expenseList) {
+            Object[] row = {
+                se.getId(),
+                se.getNama(),
+                se.getJumlah(),
+                se.getTanggalPengeluaran(),
+                se.getBuktiTransaksi(),
+                se.getKeterangan()
+            };
+            model.addRow(row);
+        }
+
+        tabelPengeluaran.setModel(model);
     }
 
     /**
@@ -45,6 +103,7 @@ public class SchoolExpensePanel extends javax.swing.JPanel {
         txtKeterangan = new javax.swing.JTextField();
         btnUpload = new javax.swing.JButton();
         btnTambah = new javax.swing.JButton();
+        btnLihatBukti = new javax.swing.JButton();
 
         jLabel1.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         jLabel1.setText("Pengeluaran");
@@ -73,8 +132,25 @@ public class SchoolExpensePanel extends javax.swing.JPanel {
         jLabel5.setText("Keterangan :");
 
         btnUpload.setText("Upload Bukti");
+        btnUpload.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUploadActionPerformed(evt);
+            }
+        });
 
         btnTambah.setText("Tambah");
+        btnTambah.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTambahActionPerformed(evt);
+            }
+        });
+
+        btnLihatBukti.setText("Lihat Bukti");
+        btnLihatBukti.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLihatBuktiActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -95,9 +171,9 @@ public class SchoolExpensePanel extends javax.swing.JPanel {
                                         .addComponent(jLabel2)
                                         .addGap(18, 18, 18)
                                         .addComponent(cmbKategori, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(65, 65, 65)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
+                                        .addGap(65, 65, 65)
                                         .addComponent(jLabel4)
                                         .addGap(18, 18, 18)
                                         .addComponent(dateChooserTanggal, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -106,10 +182,12 @@ public class SchoolExpensePanel extends javax.swing.JPanel {
                                         .addGap(18, 18, 18)
                                         .addComponent(txtKeterangan))
                                     .addGroup(layout.createSequentialGroup()
+                                        .addGap(40, 40, 40)
                                         .addComponent(btnUpload, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(18, 18, 18)
-                                        .addComponent(btnTambah, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(0, 0, Short.MAX_VALUE))))
+                                        .addComponent(btnTambah, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(btnLihatBukti, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 770, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(21, 21, 21))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -140,17 +218,140 @@ public class SchoolExpensePanel extends javax.swing.JPanel {
                             .addComponent(txtJumlah, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(btnUpload)
-                            .addComponent(btnTambah))))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(btnTambah)
+                                .addComponent(btnLihatBukti)))))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 334, Short.MAX_VALUE)
                 .addGap(26, 26, 26))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnUploadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUploadActionPerformed
+        JFileChooser chooser = new JFileChooser();
+        int result = chooser.showOpenDialog(this);
+
+        if (result == JFileChooser.APPROVE_OPTION) {
+            selectedFile = chooser.getSelectedFile();
+        }
+    }//GEN-LAST:event_btnUploadActionPerformed
+
+    private void btnTambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTambahActionPerformed
+        try {
+            String namaKategoriDipilih = cmbKategori.getSelectedItem().toString();
+            ExpenseCategoryController ecc = new ExpenseCategoryController();
+            int categoryId = ecc.getIdByNama(namaKategoriDipilih);
+            BigDecimal jumlah = new BigDecimal(txtJumlah.getText().trim());
+            Date selectedDate = dateChooserTanggal.getDate();
+
+            if (selectedDate == null || selectedFile == null) {
+                JOptionPane.showMessageDialog(this, "Tanggal dan bukti harus dipilih.");
+                return;
+            }
+
+            String keterangan = txtKeterangan.getText();
+            LocalDate tanggalPengeluaran = selectedDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+            // Simpan file bukti
+            File folder = new File("uploads");
+            if (!folder.exists()) {
+                folder.mkdirs();
+            }
+
+            String buktiPath = "uploads/" + System.currentTimeMillis() + "_" + selectedFile.getName();
+            Files.copy(selectedFile.toPath(), Paths.get(buktiPath), StandardCopyOption.REPLACE_EXISTING);
+
+            // Simpan data
+            SchoolExpense expense = new SchoolExpense();
+            expense.setCategoryId(categoryId);
+            expense.setjumlah(jumlah);
+            expense.setTanggalPengeluaran(tanggalPengeluaran);
+            expense.setBuktiTransaksi(buktiPath);
+            expense.setKeterangan(keterangan);
+            expense.setCreatedBy(1); // Ganti sesuai user login
+
+            SchoolExpenseController controller = new SchoolExpenseController();
+            boolean success = controller.tambahExpense(expense);
+
+            if (success) {
+                // Ambil ID terakhir (misalnya lewat controller)
+                int expenseId = controller.getLastInsertedExpenseId();
+
+                // Ambil saldo terakhir
+                SchoolCashflowController cashflowController = new SchoolCashflowController();
+                BigDecimal saldoSebelumnya = cashflowController.getLastSaldo();
+
+                // Buat objek cashflow
+                SchoolCashflow cashflow = new SchoolCashflow();
+                cashflow.setTipe("pengeluaran");
+                cashflow.setIncomeId(0);
+                cashflow.setExpenseId(expenseId);
+                cashflow.setJumlah(jumlah);
+                cashflow.setTanggal(tanggalPengeluaran);
+                cashflow.setSaldoAwal(saldoSebelumnya);
+                cashflow.setSaldoAkhir(saldoSebelumnya.add(jumlah));
+                cashflow.setKeterangan(keterangan);
+
+                boolean insertedCashflow = cashflowController.createSchoolCashflow(cashflow);
+
+                if (insertedCashflow) {
+                    JOptionPane.showMessageDialog(this, "Pemasukan & Cashflow berhasil disimpan.");
+                    tampilDataKategori();
+                    txtJumlah.setText("");
+                    txtKeterangan.setText("");
+                } else {
+                    JOptionPane.showMessageDialog(this, "Pemasukan tersimpan, namun gagal menyimpan cashflow.");
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Gagal menyimpan pemasukan.");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+        }
+    }//GEN-LAST:event_btnTambahActionPerformed
+
+    private void btnLihatBuktiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLihatBuktiActionPerformed
+        int selectedRow = tabelPengeluaran.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Pilih data terlebih dahulu!");
+            return;
+        }
+
+        int buktiColumnIndex = 4;
+        String buktiPath = tabelPengeluaran.getValueAt(selectedRow, buktiColumnIndex).toString();
+
+        // Tambahkan path absolut
+        File buktiFile = new File(System.getProperty("user.dir") + File.separator + buktiPath);
+        System.out.println("Cek path file: " + buktiFile.getAbsolutePath());
+        if (!buktiFile.exists()) {
+            JOptionPane.showMessageDialog(this, "File bukti tidak ditemukan!\n" + buktiFile.getAbsolutePath());
+            return;
+        }
+
+        JDialog dialog = new JDialog();
+        dialog.setTitle("Bukti Transaksi");
+        dialog.setSize(600, 600);
+        dialog.setLocationRelativeTo(this);
+
+        JLabel imageLabel = new JLabel();
+        imageLabel.setHorizontalAlignment(JLabel.CENTER);
+
+        // Load gambar
+        ImageIcon icon = new ImageIcon(buktiFile.getAbsolutePath());
+        Image img = icon.getImage().getScaledInstance(550, 500, Image.SCALE_SMOOTH);
+        imageLabel.setIcon(new ImageIcon(img));
+
+        dialog.add(imageLabel);
+        dialog.setVisible(true);
+    }//GEN-LAST:event_btnLihatBuktiActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnLihatBukti;
     private javax.swing.JButton btnTambah;
     private javax.swing.JButton btnUpload;
     private javax.swing.JComboBox<String> cmbKategori;

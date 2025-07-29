@@ -21,27 +21,20 @@ public class SchoolCashflowDAO {
     }
 
     public boolean insertNewSchoolCashflow(SchoolCashflow schoolCashflow) {
-        String sql = "INSERT INTO school_cahflow (tipe, income_id, expense_id, jumlah, tanggal, saldo_awal, saldo_akhir, keterangan) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO school_cashflow (tipe, income_id, expense_id, jumlah, tanggal, saldo_awal, saldo_akhir, keterangan) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         try {
             PreparedStatement stmt = conn.prepareStatement(sql);
-
             stmt.setString(1, schoolCashflow.getTipe());
-
-            if (schoolCashflow.getIncomeId() != 0) {
-                stmt.setInt(2, schoolCashflow.getIncomeId());
-            } else {
-                stmt.setInt(3, schoolCashflow.getExpenseId());
-            }
-
-            stmt.setFloat(4, schoolCashflow.getJumlah());
+            stmt.setObject(2, schoolCashflow.getIncomeId() != 0 ? schoolCashflow.getIncomeId() : null, java.sql.Types.INTEGER);
+            stmt.setObject(3, schoolCashflow.getExpenseId() != 0 ? schoolCashflow.getExpenseId() : null, java.sql.Types.INTEGER);
+            stmt.setBigDecimal(4, schoolCashflow.getJumlah());
             stmt.setDate(5, Date.valueOf(schoolCashflow.getTanggal()));
-            stmt.setFloat(6, schoolCashflow.getSaldoAwal());
-            stmt.setFloat(7, schoolCashflow.getSaldoAkhir());
+            stmt.setBigDecimal(6, schoolCashflow.getSaldoAwal());
+            stmt.setBigDecimal(7, schoolCashflow.getSaldoAkhir());
             stmt.setString(8, schoolCashflow.getKeterangan());
 
-            int rowsInserted = stmt.executeUpdate();
-            return rowsInserted > 0;
+            return stmt.executeUpdate() > 0;
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -65,14 +58,28 @@ public class SchoolCashflowDAO {
                 cf.setTanggal(rs.getDate("tanggal").toLocalDate());
                 cf.setKeterangan(rs.getString("keterangan"));
                 cf.setTipe(rs.getString("tipe"));
-                cf.setJumlah(rs.getFloat("jumlah"));
-                cf.setSaldoAkhir(rs.getFloat("saldo_akhir"));
+                cf.setJumlah(rs.getBigDecimal("jumlah"));
+                cf.setSaldoAkhir(rs.getBigDecimal("saldo_akhir"));
                 list.add(cf);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return list;
+    }
+
+    public BigDecimal getLatestSaldo() {
+        String sql = "SELECT saldo_akhir FROM school_cashflow ORDER BY id DESC LIMIT 1";
+        try {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getBigDecimal("saldo_akhir");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return BigDecimal.ZERO;
     }
 
     public static BigDecimal getTotalPemasukan(Connection conn, String tglAwal, String tglAkhir) throws Exception {

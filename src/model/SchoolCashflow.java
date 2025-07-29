@@ -1,5 +1,6 @@
 package model;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.LocalDate;
 
@@ -8,10 +9,10 @@ public class SchoolCashflow {
     private String tipe;
     private int income_id;
     private int expense_id;
-    private float jumlah;
+    private BigDecimal jumlah;
     private LocalDate tanggal;
-    private float saldo_awal;
-    private float saldo_akhir;
+    private BigDecimal saldo_awal;
+    private BigDecimal saldo_akhir;
     private String keterangan;
     private LocalDateTime created_at;
 
@@ -50,11 +51,11 @@ public class SchoolCashflow {
         this.expense_id = expense_id;
     }
 
-    public float getJumlah() {
+    public BigDecimal getJumlah() {
         return jumlah;
     }
 
-    public void setJumlah(float jumlah) {
+    public void setJumlah(BigDecimal jumlah) {
         this.jumlah = jumlah;
     }
 
@@ -66,19 +67,19 @@ public class SchoolCashflow {
         this.tanggal = tanggal;
     }
 
-    public float getSaldoAwal() {
+    public BigDecimal getSaldoAwal() {
         return saldo_awal;
     }
 
-    public void setSaldoAwal(float saldo_awal) {
+    public void setSaldoAwal(BigDecimal saldo_awal) {
         this.saldo_awal = saldo_awal;
     }
 
-    public float getSaldoAkhir() {
+    public BigDecimal getSaldoAkhir() {
         return saldo_akhir;
     }
 
-    public void setSaldoAkhir(float saldo_akhir) {
+    public void setSaldoAkhir(BigDecimal saldo_akhir) {
         this.saldo_akhir = saldo_akhir;
     }
 

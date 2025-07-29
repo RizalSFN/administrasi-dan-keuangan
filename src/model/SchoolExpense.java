@@ -7,6 +7,7 @@ import java.time.LocalDate;
 public class SchoolExpense {
     private int id;
     private int category_id;
+    private String nama;
     private BigDecimal jumlah;
     private LocalDate tanggal_pengeluaran;
     private String bukti_transaksi;
@@ -31,6 +32,14 @@ public class SchoolExpense {
 
     public void setCategoryId(int category_id) {
         this.category_id = category_id;
+    }
+    
+    public String getNama() {
+        return nama;
+    }
+    
+    public void setNama(String nama) {
+        this.nama = nama;
     }
 
     public BigDecimal getJumlah() {

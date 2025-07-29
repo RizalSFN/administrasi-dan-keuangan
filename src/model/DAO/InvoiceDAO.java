@@ -6,6 +6,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,22 +20,30 @@ public class InvoiceDAO {
         this.conn = conn;
     }
 
-    public boolean insertNewInvoice(Invoice invoice) {
+    public int insertInvoiceReturnId(Invoice invoice) {
         String sql = "INSERT INTO invoice (student_id, jumlah, tanggal_jatuh_tempo, status) VALUES (?, ?, ?, ?)";
-
         try {
-            PreparedStatement stmt = conn.prepareStatement(sql);
-
+            PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             stmt.setInt(1, invoice.getStudentId());
-            stmt.setFloat(2, invoice.getJumlah());
+            stmt.setBigDecimal(2, invoice.getJumlah());
             stmt.setDate(3, Date.valueOf(invoice.getTanggalJatuhTempo()));
             stmt.setString(4, invoice.getStatus());
 
-            int rowsInserted = stmt.executeUpdate();
-            return rowsInserted > 0;
+            int affectedRows = stmt.executeUpdate();
+            if (affectedRows == 0) {
+                throw new SQLException("Menyimpan invoice gagal, tidak ada baris yang dimasukkan.");
+            }
+
+            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    return generatedKeys.getInt(1); // ini adalah ID invoice baru
+                } else {
+                    throw new SQLException("Gagal mengambil ID invoice yang baru dibuat.");
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            return 0;
         }
     }
 
@@ -121,7 +130,7 @@ public class InvoiceDAO {
                 Invoice invoice = new Invoice();
                 invoice.setId(rs.getInt("id"));
                 invoice.setStudentId(rs.getInt("student_id"));
-                invoice.setJumlah(rs.getFloat("jumlah"));
+                invoice.setJumlah(rs.getBigDecimal("jumlah"));
                 invoice.setTanggalJatuhTempo(rs.getDate("tanggal_jatuh_tempo").toLocalDate());
                 invoice.setStatus(rs.getString("status"));
                 invoice.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
@@ -205,7 +214,7 @@ public class InvoiceDAO {
                 invoice = new Invoice();
                 invoice.setId(rs.getInt("id"));
                 invoice.setStudentId(rs.getInt("student_id"));
-                invoice.setJumlah(rs.getFloat("jumlah"));
+                invoice.setJumlah(rs.getBigDecimal("jumlah"));
                 invoice.setTanggalJatuhTempo(rs.getDate("tanggal_jatuh_tempo").toLocalDate());
                 invoice.setStatus(rs.getString("status"));
                 invoice.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
@@ -237,7 +246,7 @@ public class InvoiceDAO {
                 invoice = new Invoice();
                 invoice.setId(rs.getInt("id"));
                 invoice.setStudentId(rs.getInt("student_id"));
-                invoice.setJumlah(rs.getFloat("jumlah"));
+                invoice.setJumlah(rs.getBigDecimal("jumlah"));
                 invoice.setTanggalJatuhTempo(rs.getDate("tanggal_jatuh_tempo").toLocalDate());
                 invoice.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
             }
@@ -265,7 +274,7 @@ public class InvoiceDAO {
                 invoice = new Invoice();
                 invoice.setId(rs.getInt("id"));
                 invoice.setStudentId(rs.getInt("student_id"));
-                invoice.setJumlah(rs.getFloat("jumlah"));
+                invoice.setJumlah(rs.getBigDecimal("jumlah"));
                 invoice.setTanggalJatuhTempo(rs.getDate("tanggal_jatuh_tempo").toLocalDate());
                 invoice.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
             }
@@ -287,11 +296,6 @@ public class InvoiceDAO {
         if (invoice.getStudentId() != 0) {
             sql.append("student_id = ?, ");
             params.add(invoice.getStudentId());
-        }
-
-        if (invoice.getJumlah() != 0) {
-            sql.append("jumlah = ?, ");
-            params.add(invoice.getJumlah());
         }
 
         if (invoice.getTanggalJatuhTempo() != null) {

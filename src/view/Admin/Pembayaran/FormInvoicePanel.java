@@ -7,6 +7,7 @@ package view.Admin.Pembayaran;
 
 import controller.InvoiceController;
 import java.awt.CardLayout;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -127,9 +128,9 @@ public class FormInvoicePanel extends javax.swing.JPanel {
             return;
         }
 
-        float jumlah;
+        BigDecimal jumlah;
         try {
-            jumlah = Float.parseFloat(jumlahText);
+            jumlah = new BigDecimal(jumlahText.trim());
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Jumlah harus angka!");
             return;
@@ -140,9 +141,9 @@ public class FormInvoicePanel extends javax.swing.JPanel {
                 .toLocalDate();
 
         InvoiceController controller = new InvoiceController();
-        boolean success = controller.createInvoiceByNisn(nisn, jumlah, tanggalJatuhTempo);
+        int success = controller.createInvoiceByNisn(nisn, jumlah, tanggalJatuhTempo);
 
-        if (success) {
+        if (success > 0) {
             JOptionPane.showMessageDialog(this, "Invoice berhasil ditambahkan!");
 
             CardLayout cl = (CardLayout) adminDashboard.getPanelContent().getLayout();

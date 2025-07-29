@@ -25,18 +25,7 @@ public class SchoolCashflowController {
         }
     }
 
-    public boolean createSchoolCashflow(String tipe, int incomeId, int expenseId, float jumlah, Date tanggal,
-            float saldoAwal, float saldoAkhir, String keterangan) {
-        SchoolCashflow schoolCashflow = new SchoolCashflow();
-        schoolCashflow.setTipe(tipe);
-        schoolCashflow.setIncomeId(incomeId);
-        schoolCashflow.setExpenseId(expenseId);
-        schoolCashflow.setJumlah(jumlah);
-        schoolCashflow.setTanggal(tanggal.toLocalDate());
-        schoolCashflow.setSaldoAwal(saldoAkhir);
-        schoolCashflow.setSaldoAkhir(saldoAkhir);
-        schoolCashflow.setKeterangan(keterangan);
-
+    public boolean createSchoolCashflow(SchoolCashflow schoolCashflow) {
         return schoolCashflowDAO.insertNewSchoolCashflow(schoolCashflow);
     }
 
@@ -55,6 +44,10 @@ public class SchoolCashflowController {
 
     public List<SchoolCashflow> getCashflowBetween(Date tglAwal, Date tglAkhir) {
         return schoolCashflowDAO.getCashFlowBetween(tglAwal, tglAkhir);
+    }
+
+    public BigDecimal getLastSaldo() {
+        return schoolCashflowDAO.getLatestSaldo();
     }
 
     public Map<String, BigDecimal> hitungNeraca(String tanggal) throws SQLException {
