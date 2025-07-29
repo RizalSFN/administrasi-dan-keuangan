@@ -24,6 +24,10 @@ public class InvoiceController {
         }
     }
 
+    public boolean createNewInvoice(Invoice invoice) {
+        return invoiceDAO.insertNewInvoice(invoice);
+    }
+
     public boolean createInvoiceByNisn(String nisn, float jumlah, LocalDate tanggalJatuhTempo) {
         int studentId = studentDAO.findStudentIdByNisn(nisn);
 

@@ -1,5 +1,6 @@
 package model.DAO;
 
+import config.DatabaseConnection;
 import model.IncomeSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -8,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class IncomeSourceDAO {
+
     private Connection conn;
 
     public IncomeSourceDAO(Connection conn) {
@@ -31,7 +33,7 @@ public class IncomeSourceDAO {
             return false;
         }
     }
-    
+
     public List<IncomeSource> getAllKategoriPemasukan() {
         List<IncomeSource> list = new ArrayList<>();
         String sql = "SELECT * FROM income_source";
@@ -54,6 +56,48 @@ public class IncomeSourceDAO {
         }
 
         return list;
+    }
+
+    public List<IncomeSource> getAllIncomeSources() {
+        List<IncomeSource> list = new ArrayList<>();
+        String sql = "SELECT id, nama FROM income_source";
+
+        try {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                IncomeSource source = new IncomeSource();
+                source.setId(rs.getInt("id"));
+                source.setNama(rs.getString("nama"));
+                list.add(source);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+    public int getIdByName(String name) {
+        int id = -1;
+        String sql = "SELECT id FROM income_source WHERE nama = ?";
+
+        try {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, name);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                id = rs.getInt("id");
+            }
+
+            rs.close();
+            stmt.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return id;
     }
 
     public IncomeSource findByStatus(String status) {

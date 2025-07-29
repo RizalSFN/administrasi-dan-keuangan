@@ -16,6 +16,7 @@ import java.time.LocalDate;
 public class SchoolIncome {
     private int id;
     private int source_id;
+    private String nama;
     private BigDecimal jumlah;
     private LocalDate tanggal_pemasukan;
     private String bukti_transaksi;
@@ -35,6 +36,14 @@ public class SchoolIncome {
 
     public int getSourceId() {
         return source_id;
+    }
+    
+    public String getNama() {
+        return nama;
+    }
+    
+    public void setNama(String nama) {
+        this.nama = nama;
     }
 
     public void setSourceId(int source_id) {

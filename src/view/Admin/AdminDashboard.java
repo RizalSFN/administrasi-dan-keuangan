@@ -16,6 +16,8 @@ import javax.swing.JPanel;
 import model.User;
 import view.Admin.Cashflow.PemasukanPanel;
 import view.Admin.Cashflow.PengeluaranPanel;
+import view.Admin.Cashflow.SchoolExpensePanel;
+import view.Admin.Cashflow.SchoolIncomePanel;
 import view.Admin.Laporan.ArusKasPanel;
 import view.Admin.Laporan.LabaRugiPanel;
 import view.Admin.Laporan.LaporanPanel;
@@ -73,6 +75,8 @@ public class AdminDashboard extends javax.swing.JFrame {
         CashflowPanel cashflowPanel = new CashflowPanel(this);
         PemasukanPanel pemasukanPanel = new PemasukanPanel(this);
         PengeluaranPanel pengeluaranPanel = new PengeluaranPanel(this);
+        SchoolIncomePanel schoolIncomePanel = new SchoolIncomePanel(this);
+        SchoolExpensePanel schoolExpensePanel = new SchoolExpensePanel(this);
 
         pembayaranInvoicePanel = new PembayaranInvoicePanel(this);
         panelContent.add(pembayaranInvoicePanel, "PembayaranInvoice");
@@ -94,6 +98,8 @@ public class AdminDashboard extends javax.swing.JFrame {
         panelContent.add(akunPanel, "Akun");
         panelContent.add(pemasukanPanel, "KategoriPemasukan");
         panelContent.add(pengeluaranPanel, "KategoriPengeluaran");
+        panelContent.add(schoolIncomePanel, "SchoolIncome");
+        panelContent.add(schoolExpensePanel, "SchoolExpense");
 
         CardLayout cl = (CardLayout) panelContent.getLayout();
         cl.show(panelContent, "Dashboard");

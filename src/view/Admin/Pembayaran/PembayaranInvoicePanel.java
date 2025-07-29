@@ -228,6 +228,13 @@ public class PembayaranInvoicePanel extends javax.swing.JPanel {
             return;
         }
 
+        String status = tabelInvoice.getValueAt(selectedRow, 6).toString();
+
+        if (status.equalsIgnoreCase("lunas")) {
+            JOptionPane.showMessageDialog(this, "Invoice sudah lunas!");
+            return;
+        }
+
         int invoiceId = Integer.parseInt(tabelInvoice.getValueAt(selectedRow, 0).toString());
 
         InvoiceController controller = new InvoiceController();

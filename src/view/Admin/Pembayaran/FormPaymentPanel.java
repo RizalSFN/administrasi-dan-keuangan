@@ -22,6 +22,7 @@ import java.time.ZoneId;
 import java.util.Date;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import model.Invoice;
 import model.Notification;
 import model.Payment;
 import model.Student;
@@ -308,6 +309,26 @@ public class FormPaymentPanel extends javax.swing.JPanel {
                         NotificationController nc = new NotificationController();
                         nc.createNotification(notification);
                     }
+                }
+
+                InvoiceController ic = new InvoiceController();
+                Invoice prevInvoice = invoiceController.getInvoiceById(selectedInvoiceId);
+
+                if (prevInvoice != null) {
+                    // Hitung tanggal jatuh tempo akhir bulan berikutnya
+                    LocalDate jatuhTempoLama = prevInvoice.getTanggalJatuhTempo();
+                    LocalDate jatuhTempoBaru = jatuhTempoLama.plusMonths(1);
+                    LocalDate akhirBulanDepan = jatuhTempoBaru.withDayOfMonth(jatuhTempoBaru.lengthOfMonth());
+
+                    // Buat invoice baru
+                    Invoice invoiceBaru = new Invoice();
+                    invoiceBaru.setStudentId(studentId);
+                    invoiceBaru.setJumlah(prevInvoice.getJumlah());
+                    invoiceBaru.setTanggalJatuhTempo(akhirBulanDepan);
+                    invoiceBaru.setStatus("belum lunas");
+
+                    // Simpan ke database
+                    invoiceController.createNewInvoice(invoiceBaru);
                 }
 
                 JOptionPane.showMessageDialog(this, "Berhasil menyimpan pembayaran!");

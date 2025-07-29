@@ -4,16 +4,19 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Users/RIZAL/Documents/NetBeansProjects/AdministrasiDanKeuangan/src/view/Admin/Cashflow/PengeluaranPanel.java</file>
-            <file>file:/C:/Users/RIZAL/Documents/NetBeansProjects/AdministrasiDanKeuangan/src/controller/ExpenseCategoryController.java</file>
+            <file>file:/C:/Users/RIZAL/Documents/NetBeansProjects/AdministrasiDanKeuangan/src/view/Admin/Cashflow/SchoolExpensePanel.java</file>
             <file>file:/C:/Users/RIZAL/Documents/NetBeansProjects/AdministrasiDanKeuangan/src/controller/IncomeSourceController.java</file>
-            <file>file:/C:/Users/RIZAL/Documents/NetBeansProjects/AdministrasiDanKeuangan/src/model/DAO/ExpenseCategoryDAO.java</file>
+            <file>file:/C:/Users/RIZAL/Documents/NetBeansProjects/AdministrasiDanKeuangan/src/controller/SchoolIncomeController.java</file>
+            <file>file:/C:/Users/RIZAL/Documents/NetBeansProjects/AdministrasiDanKeuangan/src/view/Admin/Pembayaran/PembayaranPaymentPanel.java</file>
+            <file>file:/C:/Users/RIZAL/Documents/NetBeansProjects/AdministrasiDanKeuangan/src/view/Admin/Pembayaran/FormPaymentPanel.java</file>
             <file>file:/C:/Users/RIZAL/Documents/NetBeansProjects/AdministrasiDanKeuangan/src/model/DAO/IncomeSourceDAO.java</file>
             <file>file:/C:/Users/RIZAL/Documents/NetBeansProjects/AdministrasiDanKeuangan/src/view/Admin/Cashflow/PemasukanPanel.java</file>
             <file>file:/C:/Users/RIZAL/Documents/NetBeansProjects/AdministrasiDanKeuangan/src/view/Admin/Cashflow/FormPengeluaranPanel.java</file>
-            <file>file:/C:/Users/RIZAL/Documents/NetBeansProjects/AdministrasiDanKeuangan/src/model/DAO/NotificationCategoryDAO.java</file>
-            <file>file:/C:/Users/RIZAL/Documents/NetBeansProjects/AdministrasiDanKeuangan/src/view/Admin/Notification/NotificationCategoryPanel.java</file>
+            <file>file:/C:/Users/RIZAL/Documents/NetBeansProjects/AdministrasiDanKeuangan/src/model/DAO/SchoolCashflowDAO.java</file>
             <file>file:/C:/Users/RIZAL/Documents/NetBeansProjects/AdministrasiDanKeuangan/src/view/Admin/Cashflow/FormPemasukanPanel.java</file>
             <file>file:/C:/Users/RIZAL/Documents/NetBeansProjects/AdministrasiDanKeuangan/src/view/Admin/Pembayaran/PembayaranInvoicePanel.java</file>
+            <file>file:/C:/Users/RIZAL/Documents/NetBeansProjects/AdministrasiDanKeuangan/src/view/Admin/Cashflow/SchoolIncomePanel.java</file>
+            <file>file:/C:/Users/RIZAL/Documents/NetBeansProjects/AdministrasiDanKeuangan/src/model/DAO/SchoolIncomeDAO.java</file>
             <file>file:/C:/Users/RIZAL/Documents/NetBeansProjects/AdministrasiDanKeuangan/src/view/Admin/AdminDashboard.java</file>
             <file>file:/C:/Users/RIZAL/Documents/NetBeansProjects/AdministrasiDanKeuangan/src/view/Admin/Cashflow/CashflowPanel.java</file>
         </group>
