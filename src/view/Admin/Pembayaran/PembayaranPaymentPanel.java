@@ -6,11 +6,14 @@
 package view.Admin.Pembayaran;
 
 import controller.InvoiceController;
+import controller.NotificationController;
 import controller.PaymentController;
 import controller.StudentController;
 import java.awt.CardLayout;
 import java.awt.Image;
 import java.io.File;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
@@ -18,6 +21,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import model.Invoice;
+import model.Notification;
 import model.Payment;
 import model.Student;
 import utils.EmailSender;
@@ -322,6 +326,55 @@ public class PembayaranPaymentPanel extends javax.swing.JPanel {
                                             + "Tanggal Bayar: " + oldPayment.getTanggalBayar() + "\n\n"
                                             + "Terima kasih.\n\n"
                                             + "Hormat kami,\nStaff Keuangan SMA Tadika Mesra";
+
+                                    Invoice i = new Invoice();
+                                    i.setStudentId(invoice.getStudentId());
+                                    i.setJumlah(invoice.getJumlah());
+                                    i.setTanggalJatuhTempo(invoice.getTanggalJatuhTempo());
+                                    i.setStatus("belum lunas");
+
+                                    LocalDate jatuhTempoLama = invoice.getTanggalJatuhTempo();
+                                    LocalDate jatuhTempoBaru = jatuhTempoLama.plusMonths(1);
+                                    LocalDate akhirBulanDepan = jatuhTempoBaru.withDayOfMonth(jatuhTempoBaru.lengthOfMonth());
+
+                                    InvoiceController ic = new InvoiceController();
+                                    int inv = ic.createNewInvoiceReturnId(invoice);
+                                    i.setJumlah(invoice.getJumlah());
+                                    i.setTanggalJatuhTempo(akhirBulanDepan);
+
+                                    if (inv > 0) {
+                                        String subjectTagihan = "Tunggakan Pembayaran Selanjutnya";
+
+                                        String bodyTagihan = "Halo " + student.getNamaLengkap() + ",\n\n"
+                                                + "Kami ingin mengingatkan bahwa Anda memiliki tagihan sekolah berikutnya.\n\n"
+                                                + "Nama: " + student.getNamaLengkap() + "\n"
+                                                + "Kelas: " + student.getKelas() + "\n"
+                                                + "NISN: " + student.getNisn() + "\n"
+                                                + "Jumlah Tagihan: Rp " + String.format("%,.2f", i.getJumlah()) + "\n"
+                                                + "Jatuh Tempo: " + i.getTanggalJatuhTempo() + "\n\n"
+                                                + "Mohon untuk melakukan pembayaran sebelum tanggal jatuh tempo.\n\n"
+                                                + "Hormat kami,\n"
+                                                + "Staff Administrasi dan Keuangan\n"
+                                                + "SMA Tadika Mesra";
+
+                                        EmailSender.sendEmail(student.getEmail(), subjectTagihan, bodyTagihan);
+
+                                        Notification tagihanNotif = new Notification();
+                                        tagihanNotif.setNotificationCategoryId(1);
+                                        tagihanNotif.setStudentId(studentId);
+                                        tagihanNotif.setInvoiceId(inv++); // pastikan ID invoiceBaru diperoleh jika tersedia
+                                        tagihanNotif.setTitle(subjectTagihan);
+                                        tagihanNotif.setBody(bodyTagihan);
+                                        tagihanNotif.setDestination(student.getEmail());
+                                        tagihanNotif.setSendAt(LocalDateTime.now());
+                                        tagihanNotif.setStatus("terkirim");
+
+                                        NotificationController nc = new NotificationController();
+                                        nc.createNotification(tagihanNotif);
+                                    } else {
+                                        JOptionPane.showMessageDialog(this, "Gagal mengirim notifikasi tunggakan!");
+                                    }
+
                                 } else {
                                     subject = "Pembayaran Anda Gagal Diproses";
                                     body = "Halo " + student.getNamaLengkap() + ",\n\n"

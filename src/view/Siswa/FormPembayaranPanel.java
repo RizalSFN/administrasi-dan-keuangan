@@ -5,17 +5,53 @@
  */
 package view.Siswa;
 
+import controller.InvoiceController;
+import controller.NotificationController;
+import controller.PaymentController;
+import controller.StudentController;
+import controller.TransactionHistoryController;
+import java.awt.CardLayout;
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import model.Invoice;
+import model.Notification;
+import model.Payment;
+import model.Student;
+import model.TransactionHistory;
+import utils.EmailSender;
+import view.Admin.Pembayaran.PembayaranInvoicePanel;
+
 /**
  *
  * @author RIZAL
  */
 public class FormPembayaranPanel extends javax.swing.JPanel {
 
+    private SiswaDashboard siswaDashboard;
+    private int invoiceId;
+    private File selectedFile;
+
     /**
      * Creates new form FormPembayaranPanel
      */
-    public FormPembayaranPanel() {
+    public FormPembayaranPanel(SiswaDashboard siswaDashboard) {
         initComponents();
+        this.siswaDashboard = siswaDashboard;
+        this.invoiceId = 0;
+    }
+
+    public FormPembayaranPanel(SiswaDashboard siswaDashboard, int invoiceId) {
+        initComponents();
+        this.siswaDashboard = siswaDashboard;
+        this.invoiceId = invoiceId;
     }
 
     /**
@@ -28,25 +64,32 @@ public class FormPembayaranPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
+        btnUpload = new javax.swing.JButton();
+        btnSimpan = new javax.swing.JButton();
+        lblNamaFile = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
-        jDateChooser1 = new com.toedter.calendar.JDateChooser();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        txtJumlah = new javax.swing.JTextField();
 
         jLabel1.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         jLabel1.setText("Form Pembayaran");
 
-        jLabel2.setText("jLabel2");
+        btnUpload.setText("Upload Bukti Transaksi");
+        btnUpload.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUploadActionPerformed(evt);
+            }
+        });
 
-        jTextField1.setText("jTextField1");
+        btnSimpan.setText("Simpan");
+        btnSimpan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSimpanActionPerformed(evt);
+            }
+        });
 
-        jLabel3.setText("jLabel3");
+        lblNamaFile.setText("nama file");
 
-        jButton1.setText("Upload Bukti Trnasaksi");
-
-        jButton2.setText("Simpan");
+        jLabel2.setText("Jumlah'");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -55,53 +98,115 @@ public class FormPembayaranPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(299, 299, 299)
-                        .addComponent(jLabel1))
+                        .addGap(372, 372, 372)
+                        .addComponent(btnSimpan))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(157, 157, 157)
+                        .addGap(299, 299, 299)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(btnUpload, javax.swing.GroupLayout.DEFAULT_SIZE, 219, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel2)
-                                .addGap(18, 18, 18)
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(60, 60, 60)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton2)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel3)
-                                .addGap(18, 18, 18)
-                                .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(170, Short.MAX_VALUE))
+                                .addGap(87, 87, 87)
+                                .addComponent(lblNamaFile))
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel2)
+                            .addComponent(txtJumlah))))
+                .addContainerGap(302, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(17, 17, 17)
                 .addComponent(jLabel1)
-                .addGap(42, 42, 42)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel2)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel3))
-                    .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(54, 54, 54)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
-                .addContainerGap(315, Short.MAX_VALUE))
+                .addGap(60, 60, 60)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(txtJumlah, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 43, Short.MAX_VALUE)
+                .addComponent(btnUpload)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lblNamaFile)
+                .addGap(55, 55, 55)
+                .addComponent(btnSimpan)
+                .addGap(170, 170, 170))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnUploadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUploadActionPerformed
+        JFileChooser chooser = new JFileChooser();
+        int result = chooser.showOpenDialog(this);
+
+        if (result == JFileChooser.APPROVE_OPTION) {
+            selectedFile = chooser.getSelectedFile();
+            lblNamaFile.setText(selectedFile.getName());
+        }
+    }//GEN-LAST:event_btnUploadActionPerformed
+
+    private void btnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpanActionPerformed
+        try {
+            String jumlahText = txtJumlah.getText().trim();
+
+            if (jumlahText.isEmpty() || selectedFile == null) {
+                JOptionPane.showMessageDialog(this, "Field belum terisi semua!");
+                return;
+            }
+
+            float jumlahBayar = Float.parseFloat(jumlahText);
+
+            // Simpan file bukti
+            File folder = new File("uploads");
+            if (!folder.exists()) {
+                folder.mkdirs();
+            }
+
+            String buktiPath = "uploads/" + System.currentTimeMillis() + "_" + selectedFile.getName();
+            Files.copy(selectedFile.toPath(), Paths.get(buktiPath), StandardCopyOption.REPLACE_EXISTING);
+
+            // Simpan ke DB
+            Payment payment = new Payment();
+            payment.setInvoiceId(invoiceId);
+            payment.setJumlahBayar(jumlahBayar);
+            payment.setTanggalBayar(LocalDate.now());
+            payment.setJenisPembayaran("non tunai");
+            payment.setStatusVerifikasi("menunggu");
+            payment.setBuktiPembayaran(buktiPath);
+
+            PaymentController controller = new PaymentController();
+            int paymentId = controller.createPayment(payment);
+
+            InvoiceController invoiceController = new InvoiceController();
+            int studentId = invoiceController.getStudentIdByInvoiceId(invoiceId);
+
+            if (paymentId > 0) {
+                TransactionHistoryController historyController = new TransactionHistoryController();
+
+                TransactionHistory history = new TransactionHistory();
+                history.setStudentId(studentId);
+                history.setPaymentId(paymentId);
+                history.setKeterangan("Pembayaran SPP");
+                history.setWaktuCatat(LocalDateTime.now());
+
+                boolean historySuccess = historyController.addHistory(history);
+
+                JOptionPane.showMessageDialog(this, "Berhasil menyimpan pembayaran!");
+                CardLayout cl = (CardLayout) siswaDashboard.getPanelContent().getLayout();
+                cl.show(siswaDashboard.getPanelContent(), "Pembayaran");
+            } else {
+                JOptionPane.showMessageDialog(this, "Gagal menyimpan pembayaran!");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+        }
+    }//GEN-LAST:event_btnSimpanActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private com.toedter.calendar.JDateChooser jDateChooser1;
+    private javax.swing.JButton btnSimpan;
+    private javax.swing.JButton btnUpload;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JLabel lblNamaFile;
+    private javax.swing.JTextField txtJumlah;
     // End of variables declaration//GEN-END:variables
 }

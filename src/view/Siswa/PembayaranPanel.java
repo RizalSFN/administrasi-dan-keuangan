@@ -5,17 +5,54 @@
  */
 package view.Siswa;
 
+import controller.InvoiceController;
+import java.awt.CardLayout;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import model.Invoice;
+
 /**
  *
  * @author RIZAL
  */
 public class PembayaranPanel extends javax.swing.JPanel {
 
+    private SiswaDashboard siswaDashboard;
+    private int studentId;
+
     /**
      * Creates new form PembayaranPanel
      */
-    public PembayaranPanel() {
+    public PembayaranPanel(SiswaDashboard siswaDashboard, int studentId) {
         initComponents();
+        this.siswaDashboard = siswaDashboard;
+        this.studentId = studentId;
+        tampilDataInvoice();
+    }
+
+    public void tampilDataInvoice() {
+        InvoiceController controller = new InvoiceController();
+        List<Invoice> invoiceList = controller.getAllStudentInvoice(studentId);
+
+        String[] kolom = {"ID", "No", "Jumlah", "Tanggal Jatuh Tempo", "Status"};
+        DefaultTableModel model = new DefaultTableModel(null, kolom);
+
+        int nomor = 1;
+        for (Invoice inv : invoiceList) {
+            Object[] row = {
+                inv.getId(),
+                nomor++,
+                inv.getJumlah(),
+                inv.getTanggalJatuhTempo(),
+                inv.getStatus()
+            };
+            model.addRow(row);
+        }
+
+        tabelInvoice.getColumnModel().getColumn(0).setMinWidth(0);
+        tabelInvoice.getColumnModel().getColumn(0).setMaxWidth(0);
+        tabelInvoice.setModel(model);
     }
 
     /**
@@ -29,13 +66,13 @@ public class PembayaranPanel extends javax.swing.JPanel {
 
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tabelInvoice = new javax.swing.JTable();
         btnBayar = new javax.swing.JButton();
 
         jLabel1.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         jLabel1.setText("Pembayaran");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tabelInvoice.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -46,9 +83,14 @@ public class PembayaranPanel extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tabelInvoice);
 
         btnBayar.setText("Bayar");
+        btnBayar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBayarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -78,11 +120,40 @@ public class PembayaranPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnBayarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBayarActionPerformed
+        int selectedRow = tabelInvoice.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Pilih data invoice dulu!");
+            return;
+        }
+
+        String status = tabelInvoice.getValueAt(selectedRow, 4).toString();
+
+        if (status.equalsIgnoreCase("lunas")) {
+            JOptionPane.showMessageDialog(this, "Invoice sudah lunas!");
+            return;
+        }
+
+        int invoiceId = Integer.parseInt(tabelInvoice.getValueAt(selectedRow, 0).toString());
+
+        InvoiceController controller = new InvoiceController();
+        Invoice invoice = controller.getInvoiceById(invoiceId);
+
+        if (invoice != null) {
+            FormPembayaranPanel form = new FormPembayaranPanel(siswaDashboard, invoiceId);
+            CardLayout cl = (CardLayout) siswaDashboard.getPanelContent().getLayout();
+            siswaDashboard.getPanelContent().add(form, "FormPembayaran");
+            cl.show(siswaDashboard.getPanelContent(), "FormPembayaran");
+        } else {
+            JOptionPane.showMessageDialog(this, "Data invoice tidak ditemukan!");
+        }
+    }//GEN-LAST:event_btnBayarActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBayar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable tabelInvoice;
     // End of variables declaration//GEN-END:variables
 }

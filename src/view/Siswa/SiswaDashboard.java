@@ -5,7 +5,12 @@
  */
 package view.Siswa;
 
+import java.awt.CardLayout;
+import java.awt.Color;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import model.User;
+import view.Login;
 
 /**
  *
@@ -15,18 +20,38 @@ public class SiswaDashboard extends javax.swing.JFrame {
 
     private User user;
     private String nama;
-    
+    private String activeMenu = "DashboardSiswa";
+
     /**
      * Creates new form SiswaDashboard
      */
     public SiswaDashboard() {
         initComponents();
     }
-    
+
     public SiswaDashboard(User user) {
         initComponents();
+        this.user = user;
         txtNama.setText(user.getUsername());
-    } 
+
+        setLocationRelativeTo(null);
+        setTitle("Administrasi dan Keuangan - Dashboard");
+
+        DashboardSiswaPanel dashboardSiswaPanel = new DashboardSiswaPanel(user);
+        PembayaranPanel pembayaranPanel = new PembayaranPanel(this, user.getId());
+        FormPembayaranPanel formPembayaranPanel = new FormPembayaranPanel(this);
+
+        panelContent.add(dashboardSiswaPanel, "DashboardSiswa");
+        panelContent.add(pembayaranPanel, "Pembayaran");
+        panelContent.add(formPembayaranPanel, "FormPembayaran");
+
+        CardLayout cl = (CardLayout) panelContent.getLayout();
+        cl.show(panelContent, "DashboardSiswa");
+    }
+
+    public JPanel getPanelContent() {
+        return panelContent;
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -195,16 +220,8 @@ public class SiswaDashboard extends javax.swing.JFrame {
                 .addGap(36, 36, 36))
         );
 
-        javax.swing.GroupLayout panelContentLayout = new javax.swing.GroupLayout(panelContent);
-        panelContent.setLayout(panelContentLayout);
-        panelContentLayout.setHorizontalGroup(
-            panelContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 836, Short.MAX_VALUE)
-        );
-        panelContentLayout.setVerticalGroup(
-            panelContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
+        panelContent.setPreferredSize(new java.awt.Dimension(836, 536));
+        panelContent.setLayout(new java.awt.CardLayout());
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -225,63 +242,65 @@ public class SiswaDashboard extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void panelMenuDashboardMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelMenuDashboardMouseClicked
-//        activeMenu = "Dashboard";
-//        panelMenuCashflow.setBackground(new Color(255, 255, 255));
-//        panelMenuLaporan.setBackground(new Color(255, 255, 255));
-//        panelMenuNotifikasi.setBackground(new Color(255, 255, 255));
-//        panelMenuDashboard.setBackground(new Color(204, 204, 204));
-//        panelMenuPembayaran.setBackground(new Color(255, 255, 255));
-//
-//        CardLayout cl = (CardLayout) panelContent.getLayout();
-//        cl.show(panelContent, "Dashboard");
+        activeMenu = "DashboardSiswa";
+        panelMenuDashboard.setBackground(new Color(204, 204, 204));
+        panelMenuPembayaran.setBackground(new Color(255, 255, 255));
+
+        CardLayout cl = (CardLayout) panelContent.getLayout();
+        cl.show(panelContent, "DashboardSiswa");
     }//GEN-LAST:event_panelMenuDashboardMouseClicked
 
     private void panelMenuDashboardMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelMenuDashboardMouseEntered
-//        if (activeMenu != "Dashboard") {
-//            panelMenuDashboard.setBackground(new Color(204, 204, 204));
-//        }
+        if (activeMenu != "DashboardSiswa") {
+            panelMenuDashboard.setBackground(new Color(204, 204, 204));
+        }
     }//GEN-LAST:event_panelMenuDashboardMouseEntered
 
     private void panelMenuDashboardMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelMenuDashboardMouseExited
-//        if (activeMenu != "Dashboard") {
-//            panelMenuDashboard.setBackground(new Color(255, 255, 255));
-//        }
+        if (activeMenu != "DashboardSiswa") {
+            panelMenuDashboard.setBackground(new Color(255, 255, 255));
+        }
     }//GEN-LAST:event_panelMenuDashboardMouseExited
 
     private void logoutButtonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoutButtonMouseEntered
-        
+        logoutButton.setBackground(new Color(204, 0, 0));
     }//GEN-LAST:event_logoutButtonMouseEntered
 
     private void logoutButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoutButtonMouseExited
-        
+        logoutButton.setBackground(new Color(255, 0, 51));
     }//GEN-LAST:event_logoutButtonMouseExited
 
     private void logoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutButtonActionPerformed
-        
+        int confirm = JOptionPane.showConfirmDialog(this,
+                "Yakin mau logout?",
+                "Konfirmasi Logout",
+                JOptionPane.YES_NO_OPTION);
+
+        if (confirm == JOptionPane.YES_OPTION) {
+            new Login().setVisible(true);
+            this.dispose();
+        }
     }//GEN-LAST:event_logoutButtonActionPerformed
 
     private void panelMenuPembayaranMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelMenuPembayaranMouseClicked
-//        activeMenu = "Pembayaran";
-//        panelMenuCashflow.setBackground(new Color(255, 255, 255));
-//        panelMenuLaporan.setBackground(new Color(255, 255, 255));
-//        panelMenuNotifikasi.setBackground(new Color(255, 255, 255));
-//        panelMenuDashboard.setBackground(new Color(255, 255, 255));
-//        panelMenuPembayaran.setBackground(new Color(204, 204, 204));
-//
-//        CardLayout cl = (CardLayout) panelContent.getLayout();
-//        cl.show(panelContent, "Pembayaran");
+        activeMenu = "Pembayaran";
+        panelMenuDashboard.setBackground(new Color(255, 255, 255));
+        panelMenuPembayaran.setBackground(new Color(204, 204, 204));
+
+        CardLayout cl = (CardLayout) panelContent.getLayout();
+        cl.show(panelContent, "Pembayaran");
     }//GEN-LAST:event_panelMenuPembayaranMouseClicked
 
     private void panelMenuPembayaranMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelMenuPembayaranMouseEntered
-//        if (activeMenu != "Pembayaran") {
-//            panelMenuPembayaran.setBackground(new Color(204, 204, 204));
-//        }
+        if (activeMenu != "Pembayaran") {
+            panelMenuPembayaran.setBackground(new Color(204, 204, 204));
+        }
     }//GEN-LAST:event_panelMenuPembayaranMouseEntered
 
     private void panelMenuPembayaranMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelMenuPembayaranMouseExited
-//        if (activeMenu != "Pembayaran") {
-//            panelMenuPembayaran.setBackground(new Color(255, 255, 255));
-//        }
+        if (activeMenu != "Pembayaran") {
+            panelMenuPembayaran.setBackground(new Color(255, 255, 255));
+        }
     }//GEN-LAST:event_panelMenuPembayaranMouseExited
 
     /**

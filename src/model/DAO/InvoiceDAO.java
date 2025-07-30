@@ -152,6 +152,37 @@ public class InvoiceDAO {
         return result;
     }
 
+    public List<Invoice> getStudentInvoice(int student_id) {
+        List<Invoice> result = new ArrayList<>();
+
+        try {
+            String sql = "SELECT * FROM invoice WHERE student_id = ?";
+
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, student_id);
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Invoice invoice = new Invoice();
+                invoice.setId(rs.getInt("id"));
+                invoice.setJumlah(rs.getBigDecimal("jumlah"));
+                invoice.setTanggalJatuhTempo(rs.getDate("tanggal_jatuh_tempo").toLocalDate());
+                invoice.setStatus(rs.getString("status"));
+
+                result.add(invoice);
+            }
+
+            rs.close();
+            stmt.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
     public int getStudentIdByInvoiceId(int invoiceId) {
         int studentId = -1;
 

@@ -53,6 +53,10 @@ public class InvoiceController {
     public List<Invoice> getFilteredInvoices(String status, String nisn) {
         return invoiceDAO.getFilteredInvoices(status, nisn);
     }
+    
+    public List<Invoice> getAllStudentInvoice(int student_id) {
+        return invoiceDAO.getStudentInvoice(student_id);
+    }
 
     public boolean updateInvoice(int invoiceId, String newStatus) {
         Invoice invoice = new Invoice();
